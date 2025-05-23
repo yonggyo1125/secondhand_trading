@@ -1,0 +1,22 @@
+server:
+  port: 3000
+  servlet:
+    session.cookie.name: b8a5f3fb
+
+spring:
+  # 데이터베이스 설정
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${db.url}
+    username: ${db.username}
+    password: ${db.password}
+
+  # 타임리프 설정
+  thymeleaf:
+    cache: false
+    prefix: file:src/main/resources/templates/
+
+# 로깅 설정
+logging:
+  level:
+    org.springframework.jdbc: TRACE
