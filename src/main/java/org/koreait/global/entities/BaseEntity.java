@@ -16,4 +16,7 @@ public abstract class BaseEntity {
     @LastModifiedDate
     @Column("modifiedAt")
     private LocalDateTime modifiedAt;
+
+    @Column("deletedAt")
+    private LocalDateTime deletedAt;
 }

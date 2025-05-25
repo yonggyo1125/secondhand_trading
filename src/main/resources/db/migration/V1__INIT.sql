@@ -8,6 +8,7 @@ CREATE TABLE MEMBER (
 	termsAgree TINYINT DEFAULT 0,
 	createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
 	modifiedAt DATETIME,
+	deletedAt DATETIME,
 	PRIMARY KEY(seq)
 );
 
@@ -20,6 +21,7 @@ CREATE TABLE FILE_INFO (
     contentType VARCHAR(65),
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
     modifiedAt DATETIME,
+    deletedAt DATETIME,
     createdBy BIGINT,
     modifiedBy BIGINT,
     PRIMARY KEY(seq),
