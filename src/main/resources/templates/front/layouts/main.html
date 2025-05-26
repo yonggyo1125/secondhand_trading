@@ -13,11 +13,11 @@
         <th:block layout:fragment="addCss"></th:block>
 
         <script th:src="@{/common/js/common.js?v={v}(v=${@utils.version()})}"></script>
-        <script th:each="jsFile : ${addCommonScript}" th:src="@{/common/js/{js}.js?v=${@utils.version()}(js=${jsFile})}"></script>
+        <script th:each="jsFile : ${addCommonScript}" th:src="@{/common/js/{js}.js?v={v}(js=${jsFile}, v=${@utils.version()})}"></script>
         <th:block layout:fragment="addCommonScript"></th:block>
 
-        <script th:src="@{/front/js/common.js}"></script>
-        <script th:each="jsFile : ${addScript}" th:src="@{/front/js/{js}.js(js=${jsFile})}"></script>
+        <script th:src="@{/front/js/common.js?v={v}(v=${@utils.version()})}"></script>
+        <script th:each="jsFile : ${addScript}" th:src="@{/front/js/{js}.js?v={v}(js=${jsFile}, v=${@utils.version()})}"></script>
         <th:block layout:fragment="addScript"></th:block>
     </head>
     <body>
