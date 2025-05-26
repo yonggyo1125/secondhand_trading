@@ -3,12 +3,16 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
     <head>
         <link rel="stylesheet" type="text/css" th:href="@{/common/css/style.css}">
+        <link rel="stylesheet" type="text/css" th:each="cssFile : ${addCommonCss}"
+              th:href="@{/common/css/{css}.css(css=${cssFile})}">
+
         <link rel="stylesheet" type="text/css" th:href="@{/front/css/style.css}">
         <link rel="stylesheet" type="text/css" th:each="cssFile : ${addCss}"
               th:href="@{/front/css/{css}.css(css=${cssFile})}">
 
-
         <script th:src="@{/common/js/common.js}"></script>
+        <script th:each="jsFile : ${addCommonScript}" th:src="@{/common/js/{js}(js=${jsFile})}"></script>
+
         <script th:src="@{/front/js/common.js}"></script>
         <script th:each="jsFile : ${addScript}" th:src="@{/front/js/{js}.js(js=${jsFile})}"></script>
     </head>

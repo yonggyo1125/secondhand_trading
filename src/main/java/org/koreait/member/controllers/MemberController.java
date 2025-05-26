@@ -17,6 +17,9 @@ public class MemberController {
         model.addAttribute("addCss", List.of("member/style", "member/test"));
         model.addAttribute("addScript", List.of("member/form", "member/test2"));
 
+        model.addAttribute("addCommonCss", List.of("test/common1", "test/common2"));
+        model.addAttribute("addCommonScript", List.of("fileManager"));
+
         return "front/member/join";
     }
 }
