@@ -13,4 +13,8 @@ public class Utils {
     public int version() {
         return 1;
     }
+
+    public String keywords() {
+        return "";
+    }
 }

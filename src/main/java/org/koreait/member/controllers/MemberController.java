@@ -19,7 +19,7 @@ public class MemberController {
 
         model.addAttribute("addCommonCss", List.of("test/common1", "test/common2"));
         model.addAttribute("addCommonScript", List.of("fileManager"));
-
+        model.addAttribute("pageTitle", "회원가입");
         return "front/member/join";
     }
 }
