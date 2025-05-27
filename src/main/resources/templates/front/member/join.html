@@ -4,5 +4,16 @@
     layout:decorate="~{front/layouts/main}">
     <main layout:fragment="content">
         <h1 th:text="#{회원가입}"></h1>
+        <form name="frmJoin" method="post" th:action="@{/member/join}" autocomplete="off" th:object="${requestJoin}">
+            <div class="error global" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
+
+           <ul>
+               <li>
+                   <input type="text" name="email" th:field="*{email}" th:placeholder="#{이메일}">
+                   <div class="error" th:each="err : ${#fields.errors('email')}" th:text="${err}"></div>
+               </li>
+           </ul>
+
+        </form>
     </main>
 </html>

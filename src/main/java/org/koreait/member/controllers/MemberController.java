@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/member")
@@ -20,10 +22,18 @@ public class MemberController {
     private final Utils utils;
     private final JoinValidator joinValidator;
 
+    @ModelAttribute("addCss")
+    public List<String> addCss() {
+        return List.of("member/style");
+    }
+
     // 회원가입 양식
     @GetMapping("/join")
     public String join(@ModelAttribute RequestJoin form, Model model) {
 
+        model.addAttribute("addCommonScript", List.of("fileManager"));
+        model.addAttribute("addScript", List.of("member/join"));
+        model.addAttribute("pageTitle", "회원가입");
 
         return utils.tpl("member/join");
     }
@@ -40,5 +50,11 @@ public class MemberController {
 
         // 회원가입 성공시
         return "redirect:/member/login";
+    }
+
+    @GetMapping("/login")
+    public String login(@ModelAttribute RequestLogin form) {
+
+        return utils.tpl("member/login");
     }
 }
