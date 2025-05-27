@@ -17,4 +17,8 @@ public class Utils {
     public String keywords() {
         return "";
     }
+
+    public String description() {
+        return "";
+    }
 }
