@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.koreait.member.controllers.RequestJoin;
 import org.koreait.member.entities.Member;
 import org.koreait.member.repositories.MemberRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor
 public class JoinService {
 
+    private final ModelMapper modelMapper;
     private final PasswordEncoder encoder;
     private final MemberRepository repository;
 
@@ -31,7 +33,10 @@ public class JoinService {
             mobile = mobile.replaceAll("\\D", "");
         }
 
-        Member member = new Member();
-        member.setEmail(form.getEmail());
+        Member member = modelMapper.map(form, Member.class);
+        member.setPassword(hash);
+        member.setMobile(mobile);
+
+        repository.save(member);
     }
 }
