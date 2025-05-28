@@ -2,6 +2,7 @@ package org.koreait.member.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.koreait.global.exceptions.script.AlertException;
 import org.koreait.global.libs.Utils;
 import org.koreait.member.services.JoinService;
 import org.koreait.member.validators.JoinValidator;
@@ -58,6 +59,11 @@ public class MemberController {
     @GetMapping("/login")
     public String login(@ModelAttribute RequestLogin form, Model model) {
         commonProcess("login", model);
+
+        boolean result = false;
+        if (!result) {
+            throw new AlertException("테스트 에러!!", HttpStatus.BAD_REQUEST);
+        }
 
         return utils.tpl("member/login");
     }
