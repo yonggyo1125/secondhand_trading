@@ -2,6 +2,6 @@
 window.alert = function(message) {
     Swal.fire({
       title: message,
-      icon: "success"
+      icon: "warning"
     });
 };
