@@ -46,7 +46,7 @@ public class CommonControllerAdvice {
 
                 // location.replace(..) 추가
                 if (e instanceof AlertRedirectException redirectException) {
-                    script += String.format("%s.location.replace('%s');", redirectException.getTarget(), redirectException.getUrl());
+                    script += String.format("%s.location.replace('%s');", redirectException.getTarget(), request.getContextPath() + redirectException.getUrl());
                 }
 
                 data.put("script", script);

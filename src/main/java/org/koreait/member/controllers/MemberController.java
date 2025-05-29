@@ -2,7 +2,7 @@ package org.koreait.member.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.koreait.global.exceptions.script.AlertException;
+import org.koreait.global.exceptions.script.AlertRedirectException;
 import org.koreait.global.libs.Utils;
 import org.koreait.member.services.JoinService;
 import org.koreait.member.validators.JoinValidator;
@@ -62,7 +62,7 @@ public class MemberController {
 
         boolean result = false;
         if (!result) {
-            throw new AlertException("테스트 에러!!", HttpStatus.BAD_REQUEST);
+            throw new AlertRedirectException("예외 발생 테스트", "/member/join");
         }
 
         return utils.tpl("member/login");
