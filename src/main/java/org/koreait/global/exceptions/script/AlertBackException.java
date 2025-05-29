@@ -1,11 +1,10 @@
 package org.koreait.global.exceptions.script;
 
 import lombok.Getter;
-import org.koreait.global.exceptions.CommonException;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public class AlertBackException extends CommonException {
+public class AlertBackException extends AlertException {
     private final String target;
 
     public AlertBackException(String message, HttpStatus status, String target) {
