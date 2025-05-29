@@ -42,7 +42,7 @@ public class MemberInfo implements UserDetails {
     // 회원 탈퇴 여부
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+        return member.getDeletedAt() == null;
     }
 
     // 비밀번호가 만료 되지 않았는지
