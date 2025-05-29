@@ -18,6 +18,7 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/member")
+@SessionAttributes("requestLogin")
 public class MemberController {
 
     private final Utils utils;
@@ -27,6 +28,11 @@ public class MemberController {
     @ModelAttribute("addCss")
     public List<String> addCss() {
         return List.of("member/style");
+    }
+
+    @ModelAttribute("requestLogin")
+    public RequestLogin requestLogin() {
+        return new RequestLogin();
     }
 
     // 회원가입 양식
@@ -56,7 +62,7 @@ public class MemberController {
     }
 
     @GetMapping("/login")
-    public String login(@ModelAttribute RequestLogin form, Model model) {
+    public String login(Model model) {
         commonProcess("login", model);
 
         return utils.tpl("member/login");
