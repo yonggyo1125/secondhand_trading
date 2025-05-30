@@ -3,10 +3,9 @@ package org.koreait.member.controllers;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.koreait.global.libs.Utils;
+import org.koreait.member.libs.MemberUtil;
 import org.koreait.member.services.JoinService;
 import org.koreait.member.validators.JoinValidator;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -25,6 +24,7 @@ public class MemberController {
     private final Utils utils;
     private final JoinValidator joinValidator;
     private final JoinService joinService;
+    private final MemberUtil memberUtil;
 
     @ModelAttribute("addCss")
     public List<String> addCss() {
@@ -136,11 +136,17 @@ public class MemberController {
 //        System.out.println("memberInfo:" + memberInfo);
 //    }
 
-    @ResponseBody
-    @GetMapping("/test")
-    public void test() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("인증상태:" + auth.isAuthenticated());
-        System.out.println("Principle:" + auth.getPrincipal());
-    }
+//    @ResponseBody
+//    @GetMapping("/test")
+//    public void test() {
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        System.out.println("인증상태:" + auth.isAuthenticated());
+//        System.out.println("Principle:" + auth.getPrincipal());
+//    }
+
+//    @ResponseBody
+//    @GetMapping("/test")
+//    public void test() {
+//        System.out.printf("로그인:%s, 관리자여부:%s, 회원정보:%s%n", memberUtil.isLogin(), memberUtil.isAdmin(), memberUtil.getMember());
+//    }
 }
