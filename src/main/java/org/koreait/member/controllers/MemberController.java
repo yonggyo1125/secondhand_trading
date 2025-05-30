@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.koreait.global.libs.Utils;
 import org.koreait.member.services.JoinService;
 import org.koreait.member.validators.JoinValidator;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -45,7 +44,6 @@ public class MemberController {
 
     // 회원가입 처리
     @PostMapping("/join")
-    @ResponseStatus(HttpStatus.CREATED) // 응답 코드 201
     public String joinPs(@Valid RequestJoin form, Errors errors, Model model) {
         commonProcess("join", model);
 
