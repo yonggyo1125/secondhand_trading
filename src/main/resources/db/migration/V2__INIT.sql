@@ -1,1 +1,0 @@
-ALTER TABLE MEMBER ADD credentialChangedAt DATETIME BEFORE createdAt;
