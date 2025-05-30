@@ -85,6 +85,19 @@ public class MemberController {
     }
 
     /**
+     * 비밀번호 만료시 변경 페이지
+     *
+     * @param model
+     * @return
+     */
+    @GetMapping("/password")
+    public String password(Model model) {
+        commonProcess("password", model);
+
+        return utils.tpl("member/password");
+    }
+
+    /**
      * 현재 컨트롤러의 공통 처리 부분
      *
      * @param mode

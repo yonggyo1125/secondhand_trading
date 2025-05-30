@@ -48,12 +48,12 @@ public class MemberInfo implements UserDetails {
     // 비밀번호가 만료 되지 않았는지
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return false;
     }
 
     // 계정이 잠겨 있지 않는지
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 }
