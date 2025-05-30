@@ -42,8 +42,7 @@ public class MemberInfo implements UserDetails {
     // 회원 탈퇴 여부
     @Override
     public boolean isEnabled() {
-        //return member.getDeletedAt() == null;
-        return false;
+        return member.getDeletedAt() == null;
     }
 
     // 비밀번호가 만료 되지 않았는지
@@ -55,6 +54,6 @@ public class MemberInfo implements UserDetails {
     // 계정이 잠겨 있지 않는지
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return false;
     }
 }
