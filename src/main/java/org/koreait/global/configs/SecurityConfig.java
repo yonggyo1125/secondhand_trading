@@ -67,6 +67,7 @@ public class SecurityConfig {
 
         http.exceptionHandling(c -> {
            c.authenticationEntryPoint(new MemberAuthenticationExceptionHandler()); // 미로그인 상태에서의 인가 실패에 대한 처리
+            c.accessDeniedHandler() // 인증 받은 회원이 권한이 없는 페이지에 접근한 경우
         });
         /* 인가 설정 E */
         return http.build();
