@@ -43,6 +43,13 @@ public class SecurityConfig {
                     .authenticationSuccessHandler(new LoginSuccessHandler());
         });
 
+        /* 인가 설정 - 자원에 대한 접근 권한 설정 S */
+        http.authorizeHttpRequests(c -> {
+            c.requestMatchers("/mypage/**").authenticated()
+                    .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
+                    .anyRequest().permitAll();
+        });
+        /* 인가 설정 E */
         return http.build();
     }
 
