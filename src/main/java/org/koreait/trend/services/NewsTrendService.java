@@ -1,8 +1,10 @@
 package org.koreait.trend.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.koreait.global.configs.FileProperties;
 import org.koreait.global.configs.PythonProperties;
+import org.koreait.trend.entities.NewsTrend;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -21,8 +23,9 @@ public class NewsTrendService {
     private final FileProperties fileProperties;
 
     private final WebApplicationContext ctx;
+    private final ObjectMapper om;
 
-    public void process() {
+    public NewsTrend process() {
         // spring.profiles.active=default,prod
         boolean isProduction = Arrays.stream(ctx.getEnvironment().getActiveProfiles()).anyMatch(s -> s.equals("prod"));
 
@@ -44,7 +47,8 @@ public class NewsTrendService {
                 int statusCode = process.waitFor();
                 if (statusCode == 0) {
                     String json = process.inputReader().lines().collect(Collectors.joining());
-                    System.out.println("json:" + json);
+                    return om.readValue(json, NewsTrend.class);
+
                 } else {
                     //System.out.println("statusCode:" + statusCode);
                     //process.errorReader().lines().forEach(System.out::println);
@@ -54,5 +58,7 @@ public class NewsTrendService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return null; // 실패시에는 null
     }
 }
