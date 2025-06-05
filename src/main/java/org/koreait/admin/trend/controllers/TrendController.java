@@ -2,6 +2,8 @@ package org.koreait.admin.trend.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.koreait.admin.global.controllers.CommonController;
+import org.koreait.trend.entities.Trend;
+import org.koreait.trend.services.TrendInfoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -17,6 +19,8 @@ import java.util.List;
 @RequestMapping("/admin/trend")
 public class TrendController extends CommonController {
 
+    private final TrendInfoService infoService;
+
     @Override
     @ModelAttribute("mainCode")
     public String mainCode() {
@@ -26,6 +30,9 @@ public class TrendController extends CommonController {
     @GetMapping({"", "/news"}) // /admin/trend, /admin/trend/news
     public String news(Model model) {
         commonProcess("news", model);
+
+        Trend item = infoService.getLatest("NEWS");
+        model.addAttribute("item", item);
 
         return "admin/trend/news";
     }
@@ -47,11 +54,7 @@ public class TrendController extends CommonController {
         code = StringUtils.hasText(code) ? code : "news";
 
         String pageTitle = "";
-        List<String> addCommonScript = new ArrayList<>();
         List<String> addScript = new ArrayList<>();
-
-
-        addCommonScript.add("chart/chart"); // 공통
 
         if (code.equals("news")) {
             addScript.add("trend/news");
@@ -61,7 +64,6 @@ public class TrendController extends CommonController {
         }
 
         model.addAttribute("subCode", code);
-        model.addAttribute("addCommonScript", addCommonScript);
         model.addAttribute("addScript", addScript);
         model.addAttribute("pageTitle", pageTitle);
     }
