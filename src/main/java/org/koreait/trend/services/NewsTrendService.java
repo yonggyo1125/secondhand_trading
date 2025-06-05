@@ -34,20 +34,20 @@ public class NewsTrendService {
             activationCommand = String.format("%s/activate.bat", properties.getBase());
             pythonPath = properties.getBase() + "/python.exe";
         }
-
+        System.out.printf("ac:%s, py:%s%n", activationCommand, pythonPath);
         try {
             ProcessBuilder builder = new ProcessBuilder(activationCommand); // 가상환경 활성화
             Process process = builder.start();
             if (process.waitFor() == 0) { // 정상 수행된 경우
-                builder = new ProcessBuilder(pythonPath, "trend.py", fileProperties.getPath() + "/trend");
+                builder = new ProcessBuilder(pythonPath, properties.getTrend() + "/trend.py", fileProperties.getPath() + "/trend");
                 process = builder.start();
                 int statusCode = process.waitFor();
                 if (statusCode == 0) {
                     String json = process.inputReader().lines().collect(Collectors.joining());
                     System.out.println("json:" + json);
                 } else {
-                    System.out.println("statusCode:" + statusCode);
-                    process.errorReader().lines().forEach(System.out::println);
+                    //System.out.println("statusCode:" + statusCode);
+                    //process.errorReader().lines().forEach(System.out::println);
                 }
             }
 
