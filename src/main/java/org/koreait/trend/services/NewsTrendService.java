@@ -34,7 +34,7 @@ public class NewsTrendService {
             activationCommand = String.format("%s/activate.bat", properties.getBase());
             pythonPath = properties.getBase() + "/python.exe";
         }
-        System.out.printf("ac:%s, py:%s%n", activationCommand, pythonPath);
+
         try {
             ProcessBuilder builder = new ProcessBuilder(activationCommand); // 가상환경 활성화
             Process process = builder.start();
