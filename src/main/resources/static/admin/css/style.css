@@ -58,3 +58,19 @@ main > .main-content {
 }
 
 /* 관리자 기본 레이아웃 구성 E */
+
+/* 메뉴 공통 S */
+main > aside a {
+    display: block;
+    padding: 25px 10px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    border-bottom: 1px solid #212121;
+}
+
+main > aside a.on {
+    background: #212121;
+    color: #fff;
+}
+/* 메뉴 공통 E */
