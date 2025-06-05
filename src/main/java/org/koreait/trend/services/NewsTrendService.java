@@ -1,10 +1,14 @@
 package org.koreait.trend.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.koreait.global.configs.FileProperties;
 import org.koreait.global.configs.PythonProperties;
 import org.koreait.trend.entities.NewsTrend;
+import org.koreait.trend.entities.Trend;
+import org.koreait.trend.repositories.TrendRepository;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -23,6 +27,8 @@ public class NewsTrendService {
     private final FileProperties fileProperties;
 
     private final WebApplicationContext ctx;
+    private final TrendRepository repository;
+    private final HttpServletRequest request;
     private final ObjectMapper om;
 
     public NewsTrend process() {
@@ -60,5 +66,24 @@ public class NewsTrendService {
         }
 
         return null; // 실패시에는 null
+    }
+
+    /**
+     * 매 1시간 마다 주기적으로 뉴스 트렌드 데이터를 저장
+     *
+     */
+    public void scheduledJob() {
+       NewsTrend item = process();
+       if (item == null) return;
+        String wordCloud = String.format("%s%s/trend/%s", request.getContextPath(), fileProperties.getUrl(), item.getImage());
+
+        try {
+            String keywords = om.writeValueAsString(item.getKeywords());
+            Trend data = new Trend();
+            data.setCategory("NEWS");
+            data.setWordCloud(wordCloud);
+            data.setKeywords(keywords);
+            repository.save(data);
+        } catch (JsonProcessingException e) {}
     }
 }
