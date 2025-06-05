@@ -86,8 +86,9 @@ main > .main-content > nav {
 main > .main-content > nav a {
     line-height: 50px;
     font-size: 1.3rem;
-    padding: 0 30px;
+    padding: 0 35px;
 }
+
 main > .main-content > nav a.on {
     background: #212121;
     color: #fff;
