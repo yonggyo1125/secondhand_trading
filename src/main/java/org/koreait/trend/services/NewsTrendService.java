@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @Lazy
 @Service
@@ -38,7 +39,12 @@ public class NewsTrendService {
             ProcessBuilder builder = new ProcessBuilder(activationCommand); // 가상환경 활성화
             Process process = builder.start();
             if (process.waitFor() == 0) { // 정상 수행된 경우
-                builder = new ProcessBuilder(pythonPath, "trend.py");
+                builder = new ProcessBuilder(pythonPath, "trend.py", fileProperties.getPath() + "/trend");
+                process = builder.start();
+                if (process.waitFor() == 0) {
+                    String json = process.inputReader().lines().collect(Collectors.joining());
+                    System.out.println("json:" + json);
+                }
             }
 
         } catch (Exception e) {
