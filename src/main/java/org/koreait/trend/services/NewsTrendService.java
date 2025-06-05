@@ -41,9 +41,13 @@ public class NewsTrendService {
             if (process.waitFor() == 0) { // 정상 수행된 경우
                 builder = new ProcessBuilder(pythonPath, "trend.py", fileProperties.getPath() + "/trend");
                 process = builder.start();
-                if (process.waitFor() == 0) {
+                int statusCode = process.waitFor();
+                if (statusCode == 0) {
                     String json = process.inputReader().lines().collect(Collectors.joining());
                     System.out.println("json:" + json);
+                } else {
+                    System.out.println("statusCode:" + statusCode);
+                    process.errorReader().lines().forEach(System.out::println);
                 }
             }
 
