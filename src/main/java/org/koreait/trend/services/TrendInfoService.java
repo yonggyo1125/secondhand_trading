@@ -1,5 +1,8 @@
 package org.koreait.trend.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.koreait.global.search.CommonSearch;
 import org.koreait.trend.entities.Trend;
@@ -9,7 +12,12 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Lazy
 @Service
@@ -17,7 +25,8 @@ import java.util.List;
 public class TrendInfoService {
 
     private final TrendRepository repository;
-
+    private final TrendCollectService collectService;
+    private final ObjectMapper om;
     /**
      * 최근 트렌드 1개 조회
      *
@@ -37,8 +46,7 @@ public class TrendInfoService {
      * @return
      */
     public Trend get(String category, LocalDate date) {
-
-        return null;
+        return repository.get(category, date.atStartOfDay(), LocalDateTime.of(date, LocalTime.of(23, 59, 59))).orElse(null);
     }
 
     /**
@@ -47,7 +55,83 @@ public class TrendInfoService {
      * @return
      */
     public List<Trend> getList(String category, CommonSearch search) {
+        LocalDate sDate = Objects.requireNonNullElse(search.getSDate(), LocalDate.now());
+        LocalDate eDate = Objects.requireNonNullElse(search.getEDate(), LocalDate.now());
+        List<Trend> data = repository.getList(category, sDate.atStartOfDay(), LocalDateTime.of(eDate, LocalTime.of(23, 59, 59)));
+        return data;
+    }
 
-        return null;
+    /**
+     * URL 정보로 트렌드 데이터 조회
+     *
+     * @param url
+     * @return
+     */
+    public Map<String, Object> getStat(String url) {
+        collectService.process(url); // 데이터 한번 수집
+
+        Map<String, Object> statData = new HashMap<>(); // 통계 데이터
+
+        String category = url.contains("news.naver.com") ? "NEWS" : "" + Objects.hash(url);
+        LocalDate today = LocalDate.now();
+        LocalDate oneWeekAgo = today.minusWeeks(1L); // 일주일 전
+        LocalDate oneMonthAgo = today.minusMonths(1L); // 한달 전
+
+        Trend now = get(category, today); // 조회 시점 데이터 수집
+        statData.put("now", now);
+
+
+        CommonSearch search = new CommonSearch();
+        search.setEDate(today);
+
+        /**
+         * 통계 데이터는 일별 키워드의 조회수 평균을 구한다.
+         *
+         */
+        // 일주일간 통계 S
+        search.setSDate(oneMonthAgo);
+        List<Trend> oneWeekItems = getList(category, search);
+        statData.put("oneWeek", preprocessing(oneWeekItems));
+
+        // 일주일간 통계 E
+
+        // 한달간 통계 S
+        search.setSDate(oneMonthAgo);
+        List<Trend> oneMonthItems = getList(category, search);
+        statData.put("oneMonth", preprocessing(oneMonthItems));
+        // 한달간 통계 E
+
+        return statData;
+    }
+
+    private  Map<LocalDate, Map<String, Integer>> preprocessing(List<Trend> items) {
+        if (items == null) return null;
+
+        Map<LocalDate, Map<String, Integer>> itemsTotal = new HashMap<>(); // 키워드별 합계
+        Map<LocalDate, Map<String, Integer>> itemsAvg = new HashMap<>(); // 키워드별 통계
+        Map<LocalDate, Map<String, Integer>> itemsCount = new HashMap<>(); // 키워드별 카운트
+        for (Trend item : items) {
+            LocalDate date = item.getCreatedAt().toLocalDate();
+            Map<String, Integer> total = itemsTotal.getOrDefault(date, new HashMap<>());
+            Map<String, Integer> avg = itemsAvg.getOrDefault(date, new HashMap<>());
+            Map<String, Integer> count = itemsCount.getOrDefault(date, new HashMap<>());
+
+            try {
+                Map<String, Integer> keywords = om.readValue(item.getKeywords(), new TypeReference<>() {});
+                keywords.forEach((key, value) -> {
+                    int t = total.getOrDefault(key, 0) + value;
+                    int c = total.getOrDefault(key, 0) + 1;
+                    total.put(key, t); // 합계
+                    count.put(key, c); // 일별 통계 카운트
+                    avg.put(key, (int)Math.round(t / (double)c)); // 합계
+                });
+            } catch (JsonProcessingException e) {}
+
+            itemsTotal.put(date, total);
+            itemsCount.put(date, count);
+            itemsAvg.put(date, avg);
+        }
+
+        return itemsAvg;
     }
 }
