@@ -86,16 +86,19 @@ public class TrendInfoService {
          *
          */
         // 일주일간 통계 S
-        search.setSDate(oneMonthAgo);
+        search.setSDate(oneWeekAgo);
         List<Trend> oneWeekItems = getList(category, search);
-        statData.put("oneWeek", preprocessing(oneWeekItems));
-
+        Map<LocalDate, Map<String, Integer>> oneWeekData = preprocessing(oneWeekItems);
+        statData.put("oneWeek", oneWeekData);
+        statData.put("oneWeekWordCloud", getWordCloudPath(oneWeekData));
         // 일주일간 통계 E
 
         // 한달간 통계 S
         search.setSDate(oneMonthAgo);
         List<Trend> oneMonthItems = getList(category, search);
-        statData.put("oneMonth", preprocessing(oneMonthItems));
+        Map<LocalDate, Map<String, Integer>> oneMonthData = preprocessing(oneMonthItems);
+        statData.put("oneMonth", oneMonthData);
+        statData.put("oneMonthWordCloud", getWordCloudPath(oneMonthData));
         // 한달간 통계 E
 
 
@@ -136,5 +139,29 @@ public class TrendInfoService {
         }
 
         return itemsAvg;
+    }
+
+    /**
+     * 워드 클라우드 이미지 경로
+     *
+     * @param data
+     * @return
+     */
+    public String getWordCloudPath(Map<LocalDate, Map<String, Integer>> data) {
+        Map<String, Integer> items = new HashMap<>();
+        data.values().stream().forEach(m -> {
+            m.forEach((k, v) -> {
+
+                int cnt = items.getOrDefault(k, 0) + v;
+                items.put(k, cnt);
+            });
+        });
+
+        try {
+            String json = om.writeValueAsString(items);
+            return collectService.createWordCloud(json);
+        } catch (JsonProcessingException e) {}
+
+        return null;
     }
 }
