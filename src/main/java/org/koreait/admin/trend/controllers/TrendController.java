@@ -22,10 +22,16 @@ public class TrendController extends CommonController {
 
     private final TrendInfoService infoService;
 
+
     @Override
     @ModelAttribute("mainCode")
     public String mainCode() {
         return "trend";
+    }
+
+    @ModelAttribute("addCss")
+    public List<String> addCss() {
+        return List.of("trend/style");
     }
 
     @GetMapping({"", "/news"}) // /admin/trend, /admin/trend/news
@@ -69,7 +75,7 @@ public class TrendController extends CommonController {
             addScript.add("trend/news");
             pageTitle = "오늘의 뉴스 트렌드";
         } else if (code.equals("etc")) {
-            // 팀별 소스 넣어주세요...
+            addScript.add("trend/etc");
         }
 
         model.addAttribute("subCode", code);

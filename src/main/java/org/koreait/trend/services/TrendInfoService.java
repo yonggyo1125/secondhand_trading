@@ -14,10 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Lazy
 @Service
@@ -101,6 +98,12 @@ public class TrendInfoService {
         statData.put("oneMonth", preprocessing(oneMonthItems));
         // 한달간 통계 E
 
+
+        // JSON 변환 데이터
+        try {
+            statData.put("json", om.writeValueAsString(statData));
+        } catch (JsonProcessingException e) {}
+
         return statData;
     }
 
@@ -108,7 +111,7 @@ public class TrendInfoService {
         if (items == null) return null;
 
         Map<LocalDate, Map<String, Integer>> itemsTotal = new HashMap<>(); // 키워드별 합계
-        Map<LocalDate, Map<String, Integer>> itemsAvg = new HashMap<>(); // 키워드별 통계
+        Map<LocalDate, Map<String, Integer>> itemsAvg = new TreeMap<>(); // 키워드별 통계
         Map<LocalDate, Map<String, Integer>> itemsCount = new HashMap<>(); // 키워드별 카운트
         for (Trend item : items) {
             LocalDate date = item.getCreatedAt().toLocalDate();
@@ -120,7 +123,7 @@ public class TrendInfoService {
                 Map<String, Integer> keywords = om.readValue(item.getKeywords(), new TypeReference<>() {});
                 keywords.forEach((key, value) -> {
                     int t = total.getOrDefault(key, 0) + value;
-                    int c = total.getOrDefault(key, 0) + 1;
+                    int c = count.getOrDefault(key, 0) + 1;
                     total.put(key, t); // 합계
                     count.put(key, c); // 일별 통계 카운트
                     avg.put(key, (int)Math.round(t / (double)c)); // 합계

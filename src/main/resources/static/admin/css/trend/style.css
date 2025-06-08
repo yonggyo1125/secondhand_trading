@@ -2,8 +2,3 @@
     max-width: 700px;
     margin: 50px 0;
 }
-
-.chart-wrap canvas {
-    width: 100% !important;
-    height: auto !important;
-}
