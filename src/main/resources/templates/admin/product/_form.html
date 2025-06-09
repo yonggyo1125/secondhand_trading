@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="common" th:object="${requestProduct}">
     <div class="error global" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
-    <table class="table-cols">
+    <table class="table-cols mb30">
         <tr>
             <th width="120">상품명</th>
             <td>

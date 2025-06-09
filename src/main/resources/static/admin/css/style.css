@@ -74,6 +74,10 @@ main > aside a.on {
     color: #fff;
 }
 
+main > .main-content {
+    padding-right: 25px;
+}
+
 main > .main-content > nav {
     box-shadow: 2px 2px 10px #212121;
     margin: 30px 0;
