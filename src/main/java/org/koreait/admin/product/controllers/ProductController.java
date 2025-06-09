@@ -91,5 +91,10 @@ public class ProductController extends CommonController {
         } else if (code.equals("list")) {
             pageTitle = "상품목록";
         }
+
+        model.addAttribute("pageTitle", pageTitle);
+        model.addAttribute("subCode", code);
+        model.addAttribute("addCommonScript", addCommonScript);
+        model.addAttribute("addScript", addScript);
     }
 }

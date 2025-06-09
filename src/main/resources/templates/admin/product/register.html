@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layouts/main}">
+
+<section layout:fragment="content">
+    <h1 th:text="${pageTitle}"></h1>
+    <form name="frmSave" method="POST" th:action="@{/admin/product/save}" th:object="${requestProduct}" autocomplete="off">
+        <input type="hidden" name="mode" value="add">
+
+        <div class="button-grp">
+            <button type="reset">다시입력</button>
+            <button type="submit">등록하기</button>
+        </div>
+    </form>
+</section>
+</html>
