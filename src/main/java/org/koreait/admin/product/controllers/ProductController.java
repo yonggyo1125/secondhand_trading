@@ -5,9 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.koreait.admin.global.controllers.CommonController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -75,6 +77,19 @@ public class ProductController extends CommonController {
      * @param model
      */
     private void commonProcess(String code, Model model) {
+        code = StringUtils.hasText(code) ? code : "list";
+        String pageTitle = "";
 
+        List<String> addCommonScript = new ArrayList<>();
+        List<String> addScript = new ArrayList<>();
+
+        if (List.of("register", "update").contains(code)) { // 상품 등록 또는 수정
+            addCommonScript.add("fileManager");
+            addScript.add("product/form"); // 파일 업로드 후속 처리 또는 양식 처리 관련
+            pageTitle = code.equals("update") ? "상품정보 수정" : "상품등록";
+
+        } else if (code.equals("list")) {
+            pageTitle = "상품목록";
+        }
     }
 }
