@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
@@ -41,6 +42,7 @@ public class ProductController extends CommonController {
     @GetMapping("/register")
     public String register(@ModelAttribute RequestProduct form, Model model) {
         commonProcess("register", model);
+        form.setGid(UUID.randomUUID().toString());
 
         return "admin/product/register";
     }
