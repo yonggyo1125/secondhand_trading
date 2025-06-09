@@ -2,21 +2,35 @@ package org.koreait.admin.product.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.koreait.admin.global.controllers.CommonController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin/product")
-public class ProductController {
+public class ProductController extends CommonController {
+
+    @Override
+    @ModelAttribute("mainCode")
+    public String mainCode() {
+        return "product";
+    }
+
+    @ModelAttribute("addCss")
+    public List<String> addCss() {
+        return List.of("product/style");
+    }
 
     // 상품 목록
     @GetMapping({"", "/list"})
-    public String list() {
+    public String list(Model model) {
+        commonProcess("list", model);
 
         return "admin/product/list";
     }
@@ -24,6 +38,7 @@ public class ProductController {
     // 상품 등록
     @GetMapping("/register")
     public String register(@ModelAttribute RequestProduct form, Model model) {
+        commonProcess("register", model);
 
         return "admin/product/register";
     }
@@ -31,6 +46,7 @@ public class ProductController {
     // 상품 정보 수정
     @GetMapping("/update/{seq}")
     public String update(@PathVariable("seq") Long seq, Model model) {
+        commonProcess("update", model);
 
         return "admin/product/update";
     }
@@ -41,13 +57,24 @@ public class ProductController {
      * @return
      */
     @PostMapping("/save")
-    public String saveProduct(@Valid RequestProduct form, Errors errors) {
+    public String saveProduct(@Valid RequestProduct form, Errors errors, Model model) {
         String mode = Objects.requireNonNullElse(form.getMode(), "add");
+        commonProcess(mode.equals("edit") ? "register": "update", model);
+
         if (errors.hasErrors()) {
             return "admin/product/" + (mode.equals("edit") ? "update" : "register");
         }
 
         // 상품 등록 완료 후 상품 목록으로 이동
         return "redirect:/admin/product";
+    }
+
+    /**
+     * 공통 처리 부분
+     * @param code
+     * @param model
+     */
+    private void commonProcess(String code, Model model) {
+
     }
 }
