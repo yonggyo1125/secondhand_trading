@@ -49,6 +49,7 @@ public class ProductController extends CommonController {
     public String register(@ModelAttribute RequestProduct form, Model model) {
         commonProcess("register", model);
         form.setGid(UUID.randomUUID().toString());
+        form.setStatus(ProductStatus.READY);
 
         return "admin/product/register";
     }
