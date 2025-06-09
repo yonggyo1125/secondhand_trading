@@ -3,6 +3,7 @@ package org.koreait.admin.product.controllers;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.koreait.admin.global.controllers.CommonController;
+import org.koreait.product.constants.ProductStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -28,6 +29,11 @@ public class ProductController extends CommonController {
     @ModelAttribute("addCss")
     public List<String> addCss() {
         return List.of("product/style");
+    }
+
+    @ModelAttribute("statusList")
+    public ProductStatus[] statusList() {
+        return ProductStatus.values();
     }
 
     // 상품 목록
