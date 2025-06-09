@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,6 +22,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Lazy
 @Service
@@ -62,6 +65,42 @@ public class MemberInfoService implements UserDetailsService {
         List<String> addWhere = new ArrayList<>();
         List<Object> params = new ArrayList<>();
 
+        String sopt = search.getSopt();
+        String skey = search.getSkey();
+        sopt = StringUtils.hasText(sopt) ? sopt : "ALL";
+        /** 
+         * 키워드 검색
+         * sopt: 검색 옵션
+         *      NAME : 회원명
+         *      EMAIL : 이메일
+         *      MOBILE : 휴대전화번호
+         *      ALL : 통합 검색 - NAME + EMAIL + MOBILE
+         */
+        if (StringUtils.hasText(skey)) { // 검색 키워드가 있는 경우
+            if (sopt.equalsIgnoreCase("NAME")) { // 회원명 검색
+                addWhere.add("name LIKE ?");
+            } else if (sopt.equalsIgnoreCase("EMAIL")) { // 이메일 주소 검색
+                addWhere.add("email LIKE ?");
+            } else if (sopt.equalsIgnoreCase("MOBILE")) { // 휴대전화번호 검색
+                addWhere.add("mobile LIKE ?");
+            } else { // 통합 검색
+                addWhere.add("CONCAT(name, email, mobile) LIKE ?");
+            }
+
+            params.add("%" + skey + "%");
+        }
+
+        // 권한 조건 검색 S
+        List<Authority> authorities = search.getAuthority();
+        if (!authorities.isEmpty()) {
+
+
+            addWhere.add(" authority IN (" + Stream.generate(() -> "?").limit(authorities.size()).collect(Collectors.joining(",")) + ")");
+
+            authorities.forEach(authority ->  params.add(authority.name()));
+
+        }
+        // 권한 조건 검색 E
 
         params.add(offset);
         params.add(limit);
@@ -69,8 +108,13 @@ public class MemberInfoService implements UserDetailsService {
         StringBuffer sb = new StringBuffer(2000);
         sb.append("SELECT * FROM MEMBER");
 
-        sb.append("ORDER BY createdAt DESC");
-        sb.append("LIMIT ?, ?");
+        if (!addWhere.isEmpty()) {
+            sb.append(" WHERE ");
+            sb.append(String.join(" AND ", addWhere));
+        }
+
+        sb.append(" ORDER BY createdAt DESC");
+        sb.append(" LIMIT ?, ?");
 
         List<Member> items = jdbcTemplate.query(sb.toString(), this::mapper, params.toArray());
 

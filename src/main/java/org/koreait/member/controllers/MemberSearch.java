@@ -8,5 +8,5 @@ import java.util.List;
 
 @Data
 public class MemberSearch extends CommonSearch {
-    private List<Authority> authorities;
+    private List<Authority> authority;
 }
