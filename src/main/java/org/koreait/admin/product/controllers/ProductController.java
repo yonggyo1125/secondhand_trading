@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.koreait.admin.global.controllers.CommonController;
 import org.koreait.product.constants.ProductStatus;
+import org.koreait.product.services.ProductUpdateService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -19,6 +20,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/admin/product")
 public class ProductController extends CommonController {
+
+    private final ProductUpdateService updateService;
 
     @Override
     @ModelAttribute("mainCode")
@@ -75,6 +78,8 @@ public class ProductController extends CommonController {
         if (errors.hasErrors()) {
             return "admin/product/" + (mode.equals("edit") ? "update" : "register");
         }
+
+        updateService.process(form);
 
         // 상품 등록 완료 후 상품 목록으로 이동
         return "redirect:/admin/product";
