@@ -10,7 +10,8 @@ print(sys.argv)
 
 filepath = sys.argv[1] # 이미지 파일 경로
 items = json.loads(sys.argv[2]) # 워드 클라우드로 만들 데이터
-
+if not items:
+    sys.exit(-1)
 
 wc = WordCloud(font_path=f'{os.path.dirname(os.path.realpath(__file__))}/NanumGothic-ExtraBold.ttf', 
                background_color='white', 

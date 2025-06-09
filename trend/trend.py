@@ -7,7 +7,7 @@ from konlpy.tag import Okt
 from collections import Counter
 from bs4 import BeautifulSoup as bs
 from wordcloud import WordCloud
-from time import strftime
+from time import time
 
 # sys.argv에 값이 넘어오지 않은 경우
 if len(sys.argv) < 2:
@@ -39,7 +39,7 @@ for word, pos in okt.pos(text):
 stat = Counter(words).most_common(50)
 
 # 워드 클라우드 이미지 생성
-image_file = strftime("%Y%m%d%H%i%s") + ".jpg"
+image_file = f"{time()}.jpg"
 wc = WordCloud(font_path=f'{os.path.dirname(os.path.realpath(__file__))}/NanumGothic-ExtraBold.ttf', 
                background_color='white', 
                max_font_size=100, 

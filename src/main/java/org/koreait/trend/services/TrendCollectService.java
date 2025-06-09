@@ -119,6 +119,9 @@ public class TrendCollectService {
                 int statusCode = process.waitFor();
                 if (statusCode == 0) {
                     return fileProperties.getUrl() + "/trend/" + fileName;
+                } else {
+                    System.out.println("statusCode:" + statusCode);
+                    process.errorReader().lines().forEach(System.out::println);
                 }
             }
         } catch(Exception e) {
