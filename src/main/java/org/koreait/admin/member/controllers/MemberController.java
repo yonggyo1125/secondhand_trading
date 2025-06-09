@@ -3,11 +3,12 @@ package org.koreait.admin.member.controllers;
 import org.koreait.admin.global.controllers.CommonController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller
 @RequestMapping("/admin/member")
+@Controller("adminMemberController")
 public class MemberController extends CommonController {
 
     @Override
@@ -29,6 +30,14 @@ public class MemberController extends CommonController {
      * @param model
      */
     private void commonProcess(String code, Model model) {
+        code = StringUtils.hasText(code) ? code : "list";
+        String pageTitle = "";
 
+        if (code.equals("list")) { // 회원 목록
+            pageTitle = "회원목록";
+        }
+
+        model.addAttribute("pageTitle", pageTitle);
+        model.addAttribute("subCode", code);
     }
 }
