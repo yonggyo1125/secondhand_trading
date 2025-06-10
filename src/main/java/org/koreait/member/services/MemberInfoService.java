@@ -95,8 +95,7 @@ public class MemberInfoService implements UserDetailsService {
 
         // 권한 조건 검색 S
         List<Authority> authorities = search.getAuthority();
-        if (!authorities.isEmpty()) {
-
+        if (authorities != null && !authorities.isEmpty()) {
 
             addWhere.add(" authority IN (" + Stream.generate(() -> "?").limit(authorities.size()).collect(Collectors.joining(",")) + ")");
 
@@ -104,8 +103,6 @@ public class MemberInfoService implements UserDetailsService {
 
         }
         // 권한 조건 검색 E
-
-
 
         StringBuffer sb = new StringBuffer(2000);
         StringBuffer sb2 = new StringBuffer(2000);
@@ -128,6 +125,8 @@ public class MemberInfoService implements UserDetailsService {
         List<Member> items = jdbcTemplate.query(sb.toString(), this::mapper, params.toArray());
 
         int total = jdbcTemplate.queryForObject(sb2.toString(), int.class); // 검색 조건에 다른 전체 레코드 갯수
+
+        total = 100000;
 
         Pagination pagination = new Pagination(page, total, 10, 20, request);
 
