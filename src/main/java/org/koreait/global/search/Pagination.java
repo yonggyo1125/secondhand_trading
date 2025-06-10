@@ -11,6 +11,11 @@ public class Pagination {
     private int total;
     private int range;
     private int limit;
+    private int firstRangePage;
+    private int lastRangePage;
+    private int prevRangePage;
+    private int nextRangePage;
+    private int lastPage;
 
     /**
      *
@@ -36,9 +41,21 @@ public class Pagination {
         lastRangePage = Math.min(totalPages, lastRangePage); // 마지막 페이지는 총 페이지의 갯수 이하
 
         // 이전 구간의 마지막 페이지
-        int prevRangePage = 0; // 0이면 이전 구간이 없다.
-        if (rangeNum > 0) { // 이전 구간이 있는 경우
-            prevRangePage = firstRangePage - 1;
-        }
+        // 0이면 이전 구간이 없다.
+        int prevRangePage = rangeNum > 0 ? firstRangePage - 1 : 0;
+
+        // 다음 구간의 첫번째 페이지, 0 이면 다음 구간이 없다.
+        int lastRangeNum = (totalPages - 1) / range; // 마지막 페이지 구간 번호
+        int nextRangePage = rangeNum < lastRangeNum ? lastRangePage + 1 : 0;
+
+        this.page = page;
+        this.range = range;
+        this.limit = limit;
+        this.total = total;
+        this.lastPage = totalPages;
+        this.firstRangePage = firstRangePage;
+        this.lastRangePage = lastRangePage;
+        this.prevRangePage = prevRangePage;
+        this.nextRangePage = nextRangePage;
     }
 }
