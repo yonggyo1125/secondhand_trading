@@ -3,6 +3,7 @@ package org.koreait.admin.member.controllers;
 import lombok.RequiredArgsConstructor;
 import org.koreait.admin.global.controllers.CommonController;
 import org.koreait.global.search.ListData;
+import org.koreait.member.constants.Authority;
 import org.koreait.member.controllers.MemberSearch;
 import org.koreait.member.entities.Member;
 import org.koreait.member.services.MemberInfoService;
@@ -19,6 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class MemberController extends CommonController {
 
     private final MemberInfoService infoService;
+
+    @ModelAttribute("authorities")
+    public Authority[] authorities() {
+        return Authority.values();
+    }
 
     @Override
     public String mainCode() {
