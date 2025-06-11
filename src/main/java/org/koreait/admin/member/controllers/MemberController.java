@@ -32,6 +32,7 @@ public class MemberController extends CommonController {
     }
 
     @Override
+    @ModelAttribute("mainCode")
     public String mainCode() {
         return "member";
     }
