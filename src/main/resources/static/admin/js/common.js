@@ -20,7 +20,7 @@ window.addEventListener("DOMContentLoaded", function() {
             const { formName } = this.dataset;
             const formEl = document[formName];
             formEl._method.value = method;
-            formEl.submit();
+            alert('정말 처리하겠습니까?', () => formEl.submit());
         });
     }
     // 공통 양식 처리 E
