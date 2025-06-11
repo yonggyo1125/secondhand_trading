@@ -33,7 +33,7 @@
     </form>
 
     <h2>회원 목록</h2>
-    <form name="frmList" method="POST" th:action="@{/admin/member}" autocomplete="off">
+    <form name="frmList" method="POST" th:action="@{/admin/member}" autocomplete="off" target="ifrmProcess">
         <input type="hidden" name="_method" value="PATCH">
         <table class="table-rows">
             <thead>
