@@ -38,6 +38,9 @@ public class MemberUpdateService {
                 member.setDeletedAt(LocalDateTime.now());
             } else { // 수정처리
                 boolean updateCredentialAt = Boolean.parseBoolean(Objects.requireNonNullElse(utils.getParam("updateCredentialAt_" + chk), "false"));
+                if (updateCredentialAt) { // 비밀번호 변경일시 업데이트
+                    member.setCredentialChangedAt(LocalDateTime.now());
+                }
             }
         }
     }
