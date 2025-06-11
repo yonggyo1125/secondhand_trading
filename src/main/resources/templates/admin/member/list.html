@@ -68,7 +68,16 @@
                         <input type="checkbox" th:name="${'updateCredentialAt_' + status.index}" value="true" th:id="${'updateCredentialAt_' + status.index}">
                         <label th:for="${'updateCredentialAt_' + status.index}">업데이트</label>
                     </td>
-                    <td th:text="*{deletedAt == null ? '' : #strings.concat('탈퇴(', #temporals.format(deletedAt, 'yy.MM.dd HH:mm'),')')}" align="center"></td>
+                    <td align="center">
+                        <th:block th:if="*{deletedAt != null}">
+                            <div class="badge" th:text="*{#strings.concat('탈퇴(', #temporals.format(deletedAt, 'yy.MM.dd HH:mm'),')')}"></div>
+                            <span class="checkbox">
+                                <input type="checkbox" th:name="${'cancelResign_' + status.index}" value="true" th:id="${'cancelResign_' + status.index}">
+                                <label th:for="${'cancelResign_' + status.index}">탈퇴 취소하기</label>
+                            </span>
+                        </th:block>
+
+                    </td>
                     <td th:text="*{#temporals.format(createdAt, 'yy.MM.dd HH:mm')}" align="center"></td>
                 </tr>
                 <tr th:unless="${items != null && !items.isEmpty()}">

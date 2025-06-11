@@ -41,7 +41,18 @@ public class MemberUpdateService {
                 if (updateCredentialAt) { // 비밀번호 변경일시 업데이트
                     member.setCredentialChangedAt(LocalDateTime.now());
                 }
+
+                // 탈퇴 취소 처리
+                boolean cancelResign = Boolean.parseBoolean(Objects.requireNonNullElse(utils.getParam("cancelResign_" + chk), "false"));
+                if (cancelResign) {
+                    member.setDeletedAt(null);
+                }
+
             }
+
+            members.add(member);
         }
+
+        repository.saveAll(members);
     }
 }
