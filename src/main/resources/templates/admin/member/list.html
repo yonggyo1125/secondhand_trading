@@ -59,12 +59,22 @@
                         <input type="checkbox" name="chk" th:value="${status.index}" th:id="${'chk-' + status.index}">
                         <label th:for="${'chk-' + status.index}" class="standalone"></label>
                     </td>
+                    <td th:text="*{name}"></td>
+                    <td th:text="*{email}"></td>
+                    <td th:text="*{mobile}"></td>
+                    <td>
+                        <div th:text="*{#temporals.format(credentialChangedAt, 'yy.MM.dd HH:mm')}"></div>
+                        <input type="checkbox" th:name="${'updateCredentialAt_' + status.index}" value="true" th:id="${'updateCredentialAt_' + status.index}">
+                        <label th:for="${'updateCredentialAt_' + status.index}">업데이트</label>
+                    </td>
+                    <td th:text="*{deletedAt == null ? '' : #strings.concat('탈퇴(', #temporals.format(deletedAt, 'yy.MM.dd HH:mm'),')')}"></td>
                 </tr>
-                <tr th:uless="${items != null && !items.isEmpty()}">
+                <tr th:unless="${items != null && !items.isEmpty()}">
                     <td colspan="7" class="no-data">
                         조회된 회원이 없습니다.
                     </td>
                 </tr>
+
             </tbody>
         </table>
 
