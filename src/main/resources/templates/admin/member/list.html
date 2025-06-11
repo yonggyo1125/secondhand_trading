@@ -39,7 +39,7 @@
             <thead>
                 <tr>
                     <th width="40" align="center">
-                        <input type="checkbox" class="check-all" id="check-all">
+                        <input type="checkbox" class="check-all" id="check-all" data-target-name="chk">
                         <label for="check-all" class="standalone"></label>
                     </th>
                     <th>회원명</th>
@@ -79,8 +79,8 @@
             </tbody>
         </table>
         <div class="table-action">
-            <button type="button" class="sbtn">선택회원 탈퇴시키기</button>
-            <button type="button" class="sbtn black">선택회원 수정하기</button>
+            <button type="button" class="sbtn process-form delete" data-form-name="frmList">선택회원 탈퇴시키기</button>
+            <button type="button" class="sbtn black process-form edit" data-form-name="frmList">선택회원 수정하기</button>
         </div>
     </form>
 
