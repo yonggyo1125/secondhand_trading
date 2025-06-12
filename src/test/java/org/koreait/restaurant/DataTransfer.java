@@ -26,13 +26,19 @@ public class DataTransfer {
 
         try (FileInputStream fis = new FileInputStream("C:/restaurant/data.csv");
             InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader br = new BufferedReader(isr)) {
+            BufferedReader br = new BufferedReader(isr, 16000)) {
             int cnt = 0;
             String line = null;
             while((line = br.readLine()) != null) {
                 cnt++;
                 if (cnt == 1) continue;
+
                 try {
+                    if (line.endsWith(",")) {
+                        line = line.substring(0, line.lastIndexOf(","));
+                    }
+                    line = line.replace("?,", "\",");
+
                     List<String> item = mapper.readValue(line, new TypeReference<>() {
                     });
 
@@ -67,7 +73,11 @@ public class DataTransfer {
                     rest.setLat(lat);
                     rest.setLon(lon);
 
+                    repository.save(rest);
+
                 } catch (Exception e) {
+                    System.out.println("---- 오류 -----");
+                    System.out.println(line);
                     e.printStackTrace();
                 }
 
