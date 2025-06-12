@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.koreait.global.configs.PythonProperties;
+import org.koreait.restaurant.controllers.RestaurantSearch;
 import org.koreait.restaurant.entities.Restaurant;
 import org.koreait.restaurant.repositories.RestaurantRepository;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -35,6 +36,10 @@ public class RestaurantInfoService {
      * @return
      */
     public List<Restaurant> getNestest(double lat, double lon, int cnt) {
+        if (lat == 0.0 || lon == 0.0) {
+            return List.of();
+        }
+
         boolean isProduction = Arrays.stream(ctx.getEnvironment().getActiveProfiles()).anyMatch(s -> s.equals("prod") || s.equals("mac"));
 
         String activationCommand = null, pythonPath = null;
@@ -73,5 +78,11 @@ public class RestaurantInfoService {
 
     public List<Restaurant> getNearest(double lat, double lon) {
         return getNestest(lat, lon, 10);
+    }
+
+    public List<Restaurant> getNearest(RestaurantSearch search) {
+        int cnt = search.getCnt();
+        cnt = cnt < 1 ? 10 : cnt;
+        return getNestest(search.getLat(), search.getLon(), cnt);
     }
 }
