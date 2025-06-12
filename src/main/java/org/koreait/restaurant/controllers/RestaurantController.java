@@ -7,11 +7,13 @@ import org.koreait.restaurant.repositories.RestaurantRepository;
 import org.koreait.restaurant.services.RestaurantInfoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -25,6 +27,7 @@ public class RestaurantController {
 
     @GetMapping({"", "/list"})
     public String list(@ModelAttribute RestaurantSearch search, Model model) {
+        commonProcess("list", model);
 
         List<Restaurant> items = infoService.getNearest(search);
         model.addAttribute("items", items);
@@ -45,6 +48,20 @@ public class RestaurantController {
      * @param model
      */
     private void commonProcess(String mode, Model model) {
+        mode = StringUtils.hasText(mode) ? mode : "list";
 
+        String pageTitle = "";
+        List<String> addCss = new ArrayList<>();
+        List<String> addScript = new ArrayList<>();
+
+        if (mode.equals("list")) {
+            pageTitle = utils.getMessage("오늘의_식당");
+            addCss.add("restaurant/list");
+            addScript.add("restaurant/list");
+        }
+
+        model.addAttribute("pageTitle", pageTitle);
+        model.addAttribute("addCss", addCss);
+        model.addAttribute("addScript", addScript);
     }
 }
