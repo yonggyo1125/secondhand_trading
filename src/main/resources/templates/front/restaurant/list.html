@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{front/layouts/main}">
+
+<th:block layout:fragment="addCommonScript">
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fb6d35f671253427987c8ca7fbeb0505"></script>
+</th:block>
+
+<main layout:fragment="content">
+    <h1 th:text="${pageTitle}"></h1>
+
+</main>
+</html>
