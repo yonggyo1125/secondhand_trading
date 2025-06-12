@@ -1,5 +1,7 @@
 package org.koreait.restaurant.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.koreait.global.libs.Utils;
 import org.koreait.restaurant.entities.Restaurant;
@@ -23,6 +25,7 @@ public class RestaurantController {
 
     private final RestaurantRepository repository;
     private final RestaurantInfoService infoService;
+    private final ObjectMapper om;
     private final Utils utils;
 
     @GetMapping({"", "/list"})
@@ -31,6 +34,9 @@ public class RestaurantController {
 
         List<Restaurant> items = infoService.getNearest(search);
         model.addAttribute("items", items);
+        try {
+            model.addAttribute("json", om.writeValueAsString(items));
+        } catch (JsonProcessingException e) {}
 
         return utils.tpl("restaurant/list");
     }

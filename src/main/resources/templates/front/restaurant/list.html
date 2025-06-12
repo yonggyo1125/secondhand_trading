@@ -4,11 +4,14 @@
       layout:decorate="~{front/layouts/main}">
 
 <th:block layout:fragment="addCommonScript">
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fb6d35f671253427987c8ca7fbeb0505"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=c353cbff16c035545fd3661e0c9019ed"></script>
 </th:block>
 
 <main layout:fragment="content">
     <h1 th:text="${pageTitle}"></h1>
 
+    <div id="map" style="width:100%;height:350px;"></div>
+
+    <script type="application/json" th:utext="${json}"></script>
 </main>
 </html>
