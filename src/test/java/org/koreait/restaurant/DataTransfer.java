@@ -29,11 +29,11 @@ public class DataTransfer {
                 String address = item.get(18);
                 String roadAddress1 = item.get(19);
                 String roadAddress2 = item.get(20);
-                String zonecode = item.get(21);
-                String restaurant = item.get(22);
-                String category = item.get(26);
-                String loc1 = item.get(27);
-                String loc2 = item.get(28);
+                String zonecode = item.get(22);
+                String restaurant = item.get(23);
+                String category = item.get(27);
+                String loc1 = item.get(28);
+                String loc2 = item.get(29);
 
                 System.out.printf("operation:%s, zipcode:%s, address:%s, roadAddress1:%s, roadAddress2: %s, zonecode: %s, restaurant: %s, category: %s, loc1: %s, loc2: %s%n", operation, zipcode, address, roadAddress1, roadAddress2, zonecode, restaurant, category, loc1, loc2);
 
