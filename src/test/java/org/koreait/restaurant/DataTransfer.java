@@ -27,15 +27,14 @@ public class DataTransfer {
                 String operation = item.get(8);
                 String zipcode = item.get(17);
                 String address = item.get(18);
-                String roadAddress1 = item.get(19);
-                String roadAddress2 = item.get(20);
+                String roadAddress = item.get(19);
                 String zonecode = item.get(20);
-                String restaurant = item.get(22);
+                String restaurant = item.get(21);
                 String category = item.get(28);
                 String loc1 = item.get(26);
                 String loc2 = item.get(27);
 
-                System.out.printf("operation:%s, zipcode:%s, address:%s, roadAddress1:%s, roadAddress2: %s, zonecode: %s, restaurant: %s, category: %s, loc1: %s, loc2: %s%n", operation, zipcode, address, roadAddress1, roadAddress2, zonecode, restaurant, category, loc1, loc2);
+                System.out.printf("operation:%s, zipcode:%s, address:%s, roadAddress1:%s, zonecode: %s, restaurant: %s, category: %s, loc1: %s, loc2: %s%n", operation, zipcode, address, roadAddress, zonecode, restaurant, category, loc1, loc2);
 
                 if (cnt > 10) break;
                 cnt++;
