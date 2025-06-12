@@ -35,6 +35,8 @@ public class DataTransfer {
                 String loc1 = item.get(27);
                 String loc2 = item.get(28);
 
+                System.out.printf("operation:%s, zipcode:%s, address:%s, roadAddress1:%s, roadAddress2: %s, zonecode: %s, restaurant: %s, category: %s, loc1: %s, loc2: %s%n", operation, zipcode, address, roadAddress1, roadAddress2, zonecode, restaurant, category, loc1, loc2);
+
                 if (cnt > 10) break;
                 cnt++;
             }
