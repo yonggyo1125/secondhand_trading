@@ -1,13 +1,11 @@
 package org.koreait.restaurant.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.koreait.global.configs.PythonProperties;
 import org.koreait.restaurant.entities.Restaurant;
-import org.koreait.trend.entities.CollectedTrend;
-import org.koreait.trend.entities.Trend;
+import org.koreait.restaurant.repositories.RestaurantRepository;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -15,7 +13,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Lazy
@@ -26,6 +23,7 @@ public class RestaurantInfoService {
 
     private final PythonProperties properties;
     private final WebApplicationContext ctx;
+    private final RestaurantRepository repository;
     private final ObjectMapper om;
 
     /**
@@ -58,6 +56,7 @@ public class RestaurantInfoService {
                 if (statusCode == 0) {
                     String json = process.inputReader().lines().collect(Collectors.joining());
                     List<Long> seqs = om.readValue(json, new TypeReference<>() {});
+                    return repository.findAllById(seqs);
 
                 } else {
                     System.out.println("statusCode:" + statusCode);
@@ -68,6 +67,8 @@ public class RestaurantInfoService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return List.of();
     }
 
     public List<Restaurant> getNearest(double lat, double lon) {
