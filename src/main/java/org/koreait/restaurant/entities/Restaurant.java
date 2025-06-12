@@ -10,8 +10,11 @@ import org.springframework.data.relational.core.mapping.Table;
 public class Restaurant {
     @Id
     private Long seq;
+
     private String zipcode;
+
     private String address;
+
     private String zonecode;
 
     @Column("roadAddress")
