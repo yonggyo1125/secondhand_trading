@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.List;
 
 @SpringBootTest
@@ -40,8 +39,11 @@ public class DataTransfer {
                 double loc1 = Double.parseDouble(item.get(26));
                 double loc2 = Double.parseDouble(item.get(27));
 
-                double[] pos = transformTMToWGS84(loc1, loc2);
-                System.out.println(Arrays.toString(pos));
+                double[] pos = transformTMToWGS84(loc2, loc1);
+
+                double lat = pos[0];
+                double lon = pos[1];
+
 
                 System.out.printf("operation:%s, zipcode:%s, address:%s, roadAddress1:%s, zonecode: %s, restaurant: %s, category: %s, loc1: %s, loc2: %s%n", operation, zipcode, address, roadAddress, zonecode, restaurant, category, loc1, loc2);
 
@@ -74,6 +76,6 @@ public class DataTransfer {
         // 좌표 변환 수행
         transform.transform(sourceCoordinate, targetCoordinate);
 
-        return new double[]{targetCoordinate.x, targetCoordinate.y};
+        return new double[]{targetCoordinate.y, targetCoordinate.x};
     }
 }
