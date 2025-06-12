@@ -44,6 +44,7 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testRuntimeOnly 'com.h2database:h2'
+	testImplementation 'org.locationtech.proj4j:proj4j:1.4.0'
 }
 
 tasks.named('test') {
