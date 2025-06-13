@@ -59,15 +59,18 @@ public class RestaurantController {
         String pageTitle = "";
         List<String> addCss = new ArrayList<>();
         List<String> addScript = new ArrayList<>();
+        List<String> addCommonScript = new ArrayList<>();
 
         if (mode.equals("list")) {
             pageTitle = utils.getMessage("오늘의_식당");
             addCss.add("restaurant/list");
             addScript.add("restaurant/list");
+            addCommonScript.add("map");
         }
 
         model.addAttribute("pageTitle", pageTitle);
         model.addAttribute("addCss", addCss);
         model.addAttribute("addScript", addScript);
+        model.addAttribute("addCommonScript", addCommonScript);
     }
 }
