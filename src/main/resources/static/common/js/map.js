@@ -11,7 +11,40 @@ commonLib.mapLib = {
 
             headEl.prepend(scriptEl);
         }
+    },
+    /**
+    * 지도 출력
+
+    * @param el : 지도를 출력할 Canvas document 객체
+    * @param items : 지도 데이터
+    * @param center : 지도 출력시 처음에 위치할 가운데 좌표
+    * @param width, height : 지도의 너비, 높이
+    */
+    load(el, items, center, width, height) {
+        // 너비 또는 높이가 설정되어 있는 경우
+        if (width) {
+            el.style.width = width;
+        }
+
+        if (height) {
+            el.style.height = height;
+        }
+
+        if (center) {
+            this.showMap(el, items, center);
+
+        } else { // 가운데 좌표가 없는 경우는 현재 위치기반에서 좌표 가져옴
+            navigator.geolocation.getCurrentPosition((pos) => {
+              const { latitude: lat, longitude: lon } = pos.coords;
+              this.showMap(el, items, {lat, lon});
+            });
+        }
+    },
+    showMap(el, items, center) {
+
     }
+
+
 };
 
 window.addEventListener("DOMContentLoaded", function() {
