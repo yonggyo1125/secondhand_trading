@@ -41,10 +41,13 @@ commonLib.mapLib = {
         }
     },
     showMap(el, items, center) {
+        const mapOptions = {
+            center: new kakao.maps.LatLng(center.lat, center.lon),
+            level: 3,
+        };
 
+        const map = new kakao.maps.Map(el, mapOptions);
     }
-
-
 };
 
 window.addEventListener("DOMContentLoaded", function() {
