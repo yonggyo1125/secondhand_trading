@@ -1,5 +1,6 @@
 var commonLib = commonLib ?? {}
 commonLib.mapLib = {
+    callback: null,
     // 카카오 맵 SDK를 동적 로딩
     init() {
         const headEl = document.head;
@@ -10,6 +11,14 @@ commonLib.mapLib = {
             scriptEl.id = "kakao-map-sdk";
 
             headEl.prepend(scriptEl);
+
+            scriptEl.onload = () => {
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            };
+
+
         }
     },
     /**
@@ -41,6 +50,7 @@ commonLib.mapLib = {
         }
     },
     showMap(el, items, center) {
+        console.log(window.kakao);
         const mapOptions = {
             center: new kakao.maps.LatLng(center.lat, center.lon),
             level: 3,
