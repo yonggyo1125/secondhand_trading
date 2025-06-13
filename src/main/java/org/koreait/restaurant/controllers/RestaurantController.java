@@ -31,9 +31,9 @@ public class RestaurantController {
     @GetMapping({"", "/list"})
     public String list(@ModelAttribute RestaurantSearch search, Model model) {
         commonProcess("list", model);
-
         List<Restaurant> items = infoService.getNearest(search);
         model.addAttribute("items", items);
+        System.out.println(items);
         try {
             model.addAttribute("json", om.writeValueAsString(items));
         } catch (JsonProcessingException e) {}
