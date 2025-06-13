@@ -9,7 +9,7 @@ window.addEventListener("DOMContentLoaded", function() {
         fetch(`/restaurant/search?lat=${lat}&lon=${lon}&cnt=50`)
                 .then(res => res.json())
                 .then(items => {
-                    mapLib.load(el, items);
+                    mapLib.load(el, items, null, '100%', '500px');
                 });
     });
 
