@@ -13,8 +13,8 @@ commonLib.mapLib = {
             headEl.prepend(scriptEl);
 
             scriptEl.onload = () => {
-                if (typeof callback === 'function') {
-                    callback();
+                if (typeof this.callback === 'function') {
+                    this.callback();
                 }
             };
 
@@ -50,7 +50,6 @@ commonLib.mapLib = {
         }
     },
     showMap(el, items, center) {
-        console.log(window.kakao);
         const mapOptions = {
             center: new kakao.maps.LatLng(center.lat, center.lon),
             level: 3,
@@ -61,5 +60,5 @@ commonLib.mapLib = {
 };
 
 window.addEventListener("DOMContentLoaded", function() {
-    commonLib.mapLib.init();
+   //commonLib.mapLib.init();
 });
