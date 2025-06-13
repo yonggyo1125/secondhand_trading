@@ -12,8 +12,4 @@ window.addEventListener("DOMContentLoaded", function() {
                     mapLib.load(el, items, null, '100%', '500px');
                 });
     });
-
-
-
-
 });
