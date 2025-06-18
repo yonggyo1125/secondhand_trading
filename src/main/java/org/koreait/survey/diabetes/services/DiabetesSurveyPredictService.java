@@ -47,8 +47,7 @@ public class DiabetesSurveyPredictService {
                 int statusCode = process.waitFor();
                 if (statusCode == 0) {
                     String json = process.inputReader().lines().collect(Collectors.joining());
-                    List<Long> seqs = om.readValue(json, new TypeReference<>() {});
-                    return repository.findAllById(seqs);
+                    return om.readValue(json, new TypeReference<>() {});
 
                 } else {
                     System.out.println("statusCode:" + statusCode);
