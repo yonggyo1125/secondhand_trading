@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.koreait.global.constants.Gender;
 import org.koreait.global.libs.Utils;
 import org.koreait.survey.diabetes.constants.SmokingHistory;
+import org.koreait.survey.diabetes.validators.DiabetesSurveyValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -21,6 +22,7 @@ import java.util.List;
 public class DiabetesSurveyController {
 
     private final Utils utils;
+    private final DiabetesSurveyValidator validator;
 
     @ModelAttribute("addCss")
     public List<String> addCss() {
@@ -57,6 +59,8 @@ public class DiabetesSurveyController {
     public String step2(@Valid RequestDiabetesSurvey form, Errors errors, Model model) {
         commonProcess("step", model);
 
+        validator.validate(form, errors);
+
         if (errors.hasErrors()) {
            return utils.tpl("survey/diabetes/step1");
         }
@@ -75,6 +79,8 @@ public class DiabetesSurveyController {
     @PostMapping("/process")
     public String process(@Valid RequestDiabetesSurvey form, Errors errors, Model model, SessionStatus status) {
         commonProcess("step", model);
+
+        validator.validate(form, errors);
 
         if (errors.hasErrors()) {
             return utils.tpl("survey/diabetes/step2");

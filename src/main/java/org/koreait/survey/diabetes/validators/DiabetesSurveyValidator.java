@@ -20,10 +20,19 @@ public class DiabetesSurveyValidator implements Validator {
         String mode = form.getMode();
 
         if (StringUtils.hasText(mode) && mode.equals("step2")) { // step2 검증
-
+            validateStep2(form, errors);
         } else { // step1 검증
-
+            validateStep1(form, errors);
         }
+    }
+
+    // step1 검증
+    private void validateStep1(RequestDiabetesSurvey form, Errors errors) {
+
+    }
+
+    // step2 검증
+    private void validateStep2(RequestDiabetesSurvey form, Errors errors) {
 
     }
 }
