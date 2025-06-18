@@ -1,6 +1,7 @@
 package org.koreait.survey.diabetes.services;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.koreait.global.configs.PythonProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 public class DiabetesSurveyPredictService {
     private final PythonProperties properties;
     private final WebApplicationContext ctx;
+    private final ObjectMapper om;
 
     public List<Integer> process(List<List<Number>> items) {
 
@@ -37,7 +39,10 @@ public class DiabetesSurveyPredictService {
             ProcessBuilder builder = isProduction ? new ProcessBuilder("/bin/sh", activationCommand) : new ProcessBuilder(activationCommand); // 가상환경 활성화
             Process process = builder.start();
             if (process.waitFor() == 0) { // 정상 수행된 경우
-                builder = new ProcessBuilder(pythonPath, properties.getRestaurant() + "/search.py", "" + lat, "" + lon, "" + cnt);
+
+                String data = om.writeValueAsString(items);
+
+                builder = new ProcessBuilder(pythonPath, properties.getRestaurant() + "/diabetes/predict.py", data);
                 process = builder.start();
                 int statusCode = process.waitFor();
                 if (statusCode == 0) {
