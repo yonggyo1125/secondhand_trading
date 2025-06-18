@@ -65,7 +65,7 @@
             <dd>
                 <span th:each="item : ${smokingHistories}" th:if="${item.name() != 'NO_INFO'}">
                     <input type="radio" name="smokingHistory" th:value="${item.name()}" th:field="*{smokingHistory}" th:id="${'smokingHistory-' + item.name()}">
-                    <label th:for="${'smokingHistory-' + item.name()}" th:text="${#messages.msg(item.name())}"></label>
+                    <label th:for="${'smokingHistory-' + item.name()}" th:text="${#messages.msg('smokingHistory.' + item.name())}"></label>
                 </span>
 
                 <div class="error" th:each="err : ${#fields.errors('smokingHistory')}" th:text="${err}"></div>
