@@ -52,5 +52,17 @@ public class DiabetesSurveyController {
 
         return "redirect:/survey/diabetes/result/설문번호";
     }
+
+
+    /**
+     * 설문 결과 보기
+     *
+     * @return
+     */
+    @GetMapping("/result/{seq}")
+    public String result(@PathVariable("seq") Long seq) {
+
+        return utils.tpl("survey/diabetes/result");
+    }
 }
 
