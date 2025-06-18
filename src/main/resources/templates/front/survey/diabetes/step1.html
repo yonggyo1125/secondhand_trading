@@ -67,8 +67,12 @@
                     <input type="radio" name="smokingHistory" th:value="${item.name()}" th:field="*{smokingHistory}" th:id="${'smokingHistory-' + item.name()}">
                     <label th:for="${'smokingHistory-' + item.name()}" th:text="${#messages.msg(item.name())}"></label>
                 </span>
+
+                <div class="error" th:each="err : ${#fields.errors('smokingHistory')}" th:text="${err}"></div>
             </dd>
         </dl>
+
+        <button type="submit" th:text="#{다음_페이지}"></button>
     </form>
 </main>
 </html>
