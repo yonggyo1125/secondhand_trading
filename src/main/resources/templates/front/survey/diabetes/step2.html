@@ -18,6 +18,20 @@
                 <div class="error" th:each="err : ${#fields.errors('weight')}" th:text="${err}"></div>
             </dd>
         </dl>
+        <dl>
+            <dt th:text="#{당화혈색소_수치(HbA1c_Level)}"></dt>
+            <dd>
+                <input type="number" name="hbA1c" th:field="*{hbA1c}">%
+                <div class="error" th:each="err : ${#fields.errors('hbA1c')}" th:text="${err}"></div>
+            </dd>
+        </dl>
+        <dl>
+            <dt th:text="#{혈당_수치}"></dt>
+            <dd>
+                <input type="number" name="bloodGlucoseLevel" th:field="*{bloodGlucoseLevel}">mg/dL
+                <div class="error" th:each="err : ${#fields.errors('bloodGlucoseLevel')}" th:text="${err}"></div>
+            </dd>
+        </dl>
     </form>
 </main>
 </html>
