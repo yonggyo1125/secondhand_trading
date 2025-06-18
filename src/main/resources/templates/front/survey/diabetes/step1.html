@@ -8,6 +8,18 @@
     <form name="frmStep" method="POST" th:action="@{/survey/diabetes/step2}" autocomplete="off" th:object="${requestDiabetesSurvey}">
         <div class="error global" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
 
+        <dl>
+            <dt th:text="#{성별}"></dt>
+            <dd>
+                <span th:each="gen : ${genders}">
+                    <input type="radio" name="gender" th:value="${gen.name()}" th:field="*{gender}" th:id="${'gender-' + gen.name()}">
+                    <label th:for="${'gender-' + gen.name()}" th:text="#{gen.name()}"></label>
+                </span>
+
+                <div class="error" th:each="err : ${#fields.errors('gender')}" th:text="${err}"></div>
+            </dd>
+        </dl>
+
     </form>
 </main>
 </html>
