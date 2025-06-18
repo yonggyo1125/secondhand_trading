@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 
 import java.util.List;
 
@@ -72,12 +73,15 @@ public class DiabetesSurveyController {
      * @return
      */
     @PostMapping("/process")
-    public String process(@Valid RequestDiabetesSurvey form, Errors errors, Model model) {
+    public String process(@Valid RequestDiabetesSurvey form, Errors errors, Model model, SessionStatus status) {
         commonProcess("step", model);
 
         if (errors.hasErrors()) {
             return utils.tpl("survey/diabetes/step2");
         }
+
+        // 처리 완료 후 세션값으로 더이상 변경되지 않도록 완료 처리
+        status.setComplete();
 
         return "redirect:/survey/diabetes/result/설문번호";
     }
