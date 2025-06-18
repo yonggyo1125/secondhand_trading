@@ -24,7 +24,7 @@
         <dl>
             <dt th:text="#{나이}"></dt>
             <dd>
-                <input type="number" name="age" th:field="*{age}" min="5" max="130">
+                <input type="text" name="age" th:field="*{age}">
                 <div class="error" th:each="err : ${#fields.errors('age')}" th:text="${err}"></div>
             </dd>
         </dl>

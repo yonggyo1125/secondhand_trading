@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.koreait.global.constants.Gender;
 import org.koreait.global.libs.Utils;
 import org.koreait.survey.diabetes.constants.SmokingHistory;
+import org.koreait.survey.diabetes.services.DiabetesSurveyService;
 import org.koreait.survey.diabetes.validators.DiabetesSurveyValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +24,7 @@ public class DiabetesSurveyController {
 
     private final Utils utils;
     private final DiabetesSurveyValidator validator;
+    private final DiabetesSurveyService surveyService;
 
     @ModelAttribute("addCss")
     public List<String> addCss() {
@@ -85,6 +87,9 @@ public class DiabetesSurveyController {
         if (errors.hasErrors()) {
             return utils.tpl("survey/diabetes/step2");
         }
+
+        // 설문 결과 및 저장 처리
+        surveyService.process(form);
 
         // 처리 완료 후 세션값으로 더이상 변경되지 않도록 완료 처리
         status.setComplete();
