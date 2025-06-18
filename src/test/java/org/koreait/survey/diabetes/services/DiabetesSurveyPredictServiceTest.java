@@ -25,4 +25,12 @@ public class DiabetesSurveyPredictServiceTest {
         List<Integer> results = service.process(items);
         System.out.println(results);
     }
+
+    @Test
+    void test2() {
+        //List<Number> item = List.of(1, 46.0, 0.0, 0.0, 3, 29.6, 5.8, 130);
+        List<Number> item = List.of(1, 41, 0, 0, 0,29.6, 8.2, 126);
+        boolean result = service.isDiabetes(item);
+        System.out.println(result);
+    }
 }
