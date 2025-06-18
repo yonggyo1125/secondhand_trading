@@ -44,6 +44,7 @@ public class DiabetesSurveyValidator implements Validator {
         double height = form.getHeight();
         double weight = form.getWeight();
         double hbA1c = form.getHbA1c();
+        double bloodGlucoseLevel = form.getBloodGlucoseLevel();
 
         if (height < 50.0 || height > 350.0) {
             errors.rejectValue("height", "Size");
@@ -55,6 +56,10 @@ public class DiabetesSurveyValidator implements Validator {
 
         if (hbA1c < 0.0 || hbA1c > 100.0) {
             errors.rejectValue("hbA1c", "Size");
+        }
+
+        if (bloodGlucoseLevel < 0.0) {
+            errors.rejectValue("bloodGlucoseLevel", "Size");
         }
     }
 }
