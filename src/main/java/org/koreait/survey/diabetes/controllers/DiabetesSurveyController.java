@@ -30,13 +30,16 @@ public class DiabetesSurveyController {
     }
 
     @GetMapping("/step1")
-    public String step1(@ModelAttribute RequestDiabetesSurvey form) {
+    public String step1(@ModelAttribute RequestDiabetesSurvey form, Model model) {
+        commonProcess("step", model);
 
         return utils.tpl("survey/diabetes/step1");
     }
 
     @PostMapping("/step2")
-    public String step2(@Valid RequestDiabetesSurvey form, Errors errors) {
+    public String step2(@Valid RequestDiabetesSurvey form, Errors errors, Model model) {
+        commonProcess("step", model);
+
         if (errors.hasErrors()) {
            return utils.tpl("survey/diabetes/step1");
         }
@@ -53,7 +56,8 @@ public class DiabetesSurveyController {
      * @return
      */
     @PostMapping("/process")
-    public String process(@Valid RequestDiabetesSurvey form, Errors errors) {
+    public String process(@Valid RequestDiabetesSurvey form, Errors errors, Model model) {
+        commonProcess("step", model);
 
         if (errors.hasErrors()) {
             return utils.tpl("survey/diabetes/step2");
@@ -69,7 +73,8 @@ public class DiabetesSurveyController {
      * @return
      */
     @GetMapping("/result/{seq}")
-    public String result(@PathVariable("seq") Long seq) {
+    public String result(@PathVariable("seq") Long seq, Model model) {
+        commonProcess("result", model);
 
         return utils.tpl("survey/diabetes/result");
     }
