@@ -13,6 +13,6 @@ public class RequestDiabetesSurvey {
     private SmokingHistory smokingHistory; // 흡연 여부
     private double height; // 키(cm)
     private double weight; // 몸무게(kg)
-    private double hbA1c; // 당화혈색소 수치 (2~3개월 동안 평균 혈당 수치)
-    private double bloodGlucoseLevel; // 혈당 수치
+    private double hbA1c; // 당화혈색소 수치 (2~3개월 동안 평균 혈당 수치) (mg/dL)
+    private double bloodGlucoseLevel; // 혈당 수치 (mg/dL)
 }
