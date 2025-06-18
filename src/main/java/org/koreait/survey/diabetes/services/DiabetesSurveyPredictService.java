@@ -61,4 +61,16 @@ public class DiabetesSurveyPredictService {
 
         return List.of();
     }
+
+    /**
+     * 설문 하나에 대한 당뇨병 설문 결과
+     *
+     * @param item
+     * @return
+     */
+    public boolean isDiabetes(List<Number> item) {
+        List<Integer> results = process(List.of(item));
+
+        return !results.isEmpty() && results.getFirst() == 1;
+    }
 }
