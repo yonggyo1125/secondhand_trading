@@ -1,5 +1,6 @@
 package org.koreait.survey.diabetes.services;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.RequiredArgsConstructor;
 import org.koreait.global.configs.PythonProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -9,6 +10,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Lazy
 @Service
@@ -31,6 +33,28 @@ public class DiabetesSurveyPredictService {
             pythonPath = properties.getBase2() + "/python.exe";
         }
 
-        return null;
+        try {
+            ProcessBuilder builder = isProduction ? new ProcessBuilder("/bin/sh", activationCommand) : new ProcessBuilder(activationCommand); // 가상환경 활성화
+            Process process = builder.start();
+            if (process.waitFor() == 0) { // 정상 수행된 경우
+                builder = new ProcessBuilder(pythonPath, properties.getRestaurant() + "/search.py", "" + lat, "" + lon, "" + cnt);
+                process = builder.start();
+                int statusCode = process.waitFor();
+                if (statusCode == 0) {
+                    String json = process.inputReader().lines().collect(Collectors.joining());
+                    List<Long> seqs = om.readValue(json, new TypeReference<>() {});
+                    return repository.findAllById(seqs);
+
+                } else {
+                    System.out.println("statusCode:" + statusCode);
+                    process.errorReader().lines().forEach(System.out::println);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return List.of();
     }
 }
