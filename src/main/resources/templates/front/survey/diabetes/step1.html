@@ -6,7 +6,9 @@
 <main layout:fragment="content">
     <h1 th:text="${pageTitle}"></h1>
     <form name="frmStep" method="POST" th:action="@{/survey/diabetes/step2}" autocomplete="off" th:object="${requestDiabetesSurvey}">
+        <input type="hidden" name="mode" value="step1">
         <div class="error global" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
+
 
         <dl>
             <dt th:text="#{성별}"></dt>

@@ -6,6 +6,7 @@ import org.koreait.survey.diabetes.constants.SmokingHistory;
 
 @Data
 public class RequestDiabetesSurvey {
+    private String mode; // step1, step2
     private Gender gender;
     private int age;
     private boolean hypertension; // 고혈압 여부

@@ -28,7 +28,11 @@ public class DiabetesSurveyController {
 
     @ModelAttribute("requestDiabetesSurvey")
     public RequestDiabetesSurvey requestDiabetesSurvey() {
-        return new RequestDiabetesSurvey();
+        RequestDiabetesSurvey form = new RequestDiabetesSurvey();
+        form.setGender(Gender.FEMALE);
+        form.setSmokingHistory(SmokingHistory.CURRENT);
+
+        return form;
     }
 
     @ModelAttribute("genders")
