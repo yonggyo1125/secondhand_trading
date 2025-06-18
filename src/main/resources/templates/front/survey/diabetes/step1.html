@@ -59,6 +59,16 @@
                 <div class="error" th:each="err : ${#fields.errors('heartDisease')}" th:text="${err}"></div>
             </dd>
         </dl>
+
+        <dl>
+            <dt th:text="#{흡연여부}"></dt>
+            <dd>
+                <span th:each="item : ${smokingHistories}" th:if="${item.name() != 'NOT_INFO'}">
+                    <input type="radio" name="smokingHistory" th:value="${item.name()}" th:field="*{smokingHistory}" th:id="${'smokingHistory-' + item.name()}">
+                    <label th:for="${'smokingHistory-' + item.name()}" th:text="${#messages.msg(item.name())}"></label>
+                </span>
+            </dd>
+        </dl>
     </form>
 </main>
 </html>
