@@ -93,7 +93,6 @@ public class DiabetesSurveyPredictService {
 
         item.add(form.getHbA1c()); // 당화혈색소 수치
         item.add(form.getBloodGlucoseLevel()); // 혈당 수치
-        System.out.println("item:" + item);
 
         return isDiabetes(item);
     }
