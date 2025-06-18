@@ -4,8 +4,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.koreait.global.libs.Utils;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -14,6 +18,11 @@ import org.springframework.web.bind.annotation.*;
 public class DiabetesSurveyController {
 
     private final Utils utils;
+
+    @ModelAttribute("addCss")
+    public List<String> addCss() {
+        return List.of("survey/diabetes/style");
+    }
 
     @ModelAttribute("requestDiabetesSurvey")
     public RequestDiabetesSurvey requestDiabetesSurvey() {
@@ -64,5 +73,23 @@ public class DiabetesSurveyController {
 
         return utils.tpl("survey/diabetes/result");
     }
-}
 
+    /**
+     * 컨트롤러 공통 처리
+     *
+     * @param mode
+     * @param model
+     */
+    private void commonProcess(String mode, Model model) {
+        mode = StringUtils.hasText(mode) ? mode : "step";
+        String pageTitle = "";
+        if (mode.equals("step")) {
+            pageTitle = utils.getMessage("당뇨_고위험군_테스트");
+
+        } else if (mode.equals("result")) {
+            pageTitle = utils.getMessage("당뇨_고위험군_테스트_결과");
+        }
+
+        model.addAttribute("pageTitle", pageTitle);
+    }
+}
