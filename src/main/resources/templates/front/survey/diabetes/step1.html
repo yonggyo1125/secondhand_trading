@@ -13,7 +13,7 @@
             <dd>
                 <span th:each="gen : ${genders}">
                     <input type="radio" name="gender" th:value="${gen.name()}" th:field="*{gender}" th:id="${'gender-' + gen.name()}">
-                    <label th:for="${'gender-' + gen.name()}" th:text="#{gen.name()}"></label>
+                    <label th:for="${'gender-' + gen.name()}" th:text="${#messages.msg(gen.name())}"></label>
                 </span>
 
                 <div class="error" th:each="err : ${#fields.errors('gender')}" th:text="${err}"></div>
