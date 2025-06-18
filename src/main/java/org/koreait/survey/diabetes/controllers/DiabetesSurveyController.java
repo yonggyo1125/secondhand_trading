@@ -2,7 +2,9 @@ package org.koreait.survey.diabetes.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.koreait.global.constants.Gender;
 import org.koreait.global.libs.Utils;
+import org.koreait.survey.diabetes.constants.SmokingHistory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -27,6 +29,16 @@ public class DiabetesSurveyController {
     @ModelAttribute("requestDiabetesSurvey")
     public RequestDiabetesSurvey requestDiabetesSurvey() {
         return new RequestDiabetesSurvey();
+    }
+
+    @ModelAttribute("genders")
+    public Gender[] genders() {
+        return Gender.values();
+    }
+
+    @ModelAttribute("smokingHistories")
+    public SmokingHistory[] smokingHistories() {
+        return SmokingHistory.values();
     }
 
     @GetMapping("/step1")
