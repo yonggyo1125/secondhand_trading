@@ -12,6 +12,10 @@ CREATE TABLE SURVEY_DIABETES (
     hbA1c FLOAT,
     bloodGlucoseLevel FLOAT,
     diabetes TINYINT(1),
+    trainDone TINYINT(1),
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    modifiedAt DATETIME,
+    deletedAt DATETIME,
     FOREIGN KEY(memberSeq) REFERENCES MEMBER(seq),
     PRIMARY KEY(seq)
 );
