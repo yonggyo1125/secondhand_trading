@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.koreait.global.constants.Gender;
 import org.koreait.global.search.CommonSearch;
 import org.koreait.global.search.ListData;
+import org.koreait.survey.diabetes.constants.SmokingHistory;
 import org.koreait.survey.diabetes.entities.DiabetesSurvey;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -45,6 +46,11 @@ public class DiabetesSurveyInfoService {
         item.setBmi(rs.getDouble("bmi"));
         item.setHeight(rs.getDouble("height"));
         item.setWeight(rs.getDouble("weight"));
+        item.setHypertension(rs.getBoolean("hypertension"));
+        item.setHeartDisease(rs.getBoolean("heartDisease"));
+        item.setHbA1c(rs.getDouble("hbA1c"));
+        item.setBloodGlucoseLevel(rs.getDouble("bloodGlucoseLevel"));
+        item.setSmokingHistory(SmokingHistory.valueOf(rs.getString("smokingHistory")));
 
 
     }
