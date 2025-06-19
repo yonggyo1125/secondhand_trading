@@ -19,6 +19,7 @@ public class DiabetesSurvey extends BaseEntity {
     private Member member;
 
     private Gender gender;
+    private int age;
     private boolean hypertension;
 
     @Column("heartDisease")
@@ -36,4 +37,6 @@ public class DiabetesSurvey extends BaseEntity {
 
     @Column("bloodGlucoseLevel")
     private double bloodGlucoseLevel;
+
+    private boolean diabetes;
 }
