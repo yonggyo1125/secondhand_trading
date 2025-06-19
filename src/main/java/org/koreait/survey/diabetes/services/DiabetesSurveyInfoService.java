@@ -1,25 +1,33 @@
 package org.koreait.survey.diabetes.services;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.koreait.global.constants.Gender;
 import org.koreait.global.search.CommonSearch;
 import org.koreait.global.search.ListData;
+import org.koreait.global.search.Pagination;
 import org.koreait.member.entities.Member;
+import org.koreait.member.libs.MemberUtil;
 import org.koreait.survey.diabetes.constants.SmokingHistory;
 import org.koreait.survey.diabetes.entities.DiabetesSurvey;
+import org.koreait.survey.exceptions.SurveyNotFoundException;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 @Lazy
 @Service
 @RequiredArgsConstructor
 public class DiabetesSurveyInfoService {
 
+    private final HttpServletRequest request;
     private final JdbcTemplate jdbcTemplate;
+    private final MemberUtil memberUtil;
 
     /**
      * 설문지 한개 조회
@@ -28,13 +36,47 @@ public class DiabetesSurveyInfoService {
      * @return
      */
     public DiabetesSurvey get(Long seq) {
+        try {
+            String sql = "SELECT s.*, m.email, m.name, m.mobile FROM SURVEY_DIABETES s " +
+                        " LEFT JOIN MEMBER m ON s.memberSeq = m.seq WHERE seq = ?";
+            return jdbcTemplate.queryForObject(sql, this::mapper, seq);
 
-        return null;
+        } catch (DataAccessException e) { // 조회가 안된 경우
+            throw new SurveyNotFoundException();
+        }
     }
 
+    /**
+     * 목록 조회
+     * - 회원 전용
+     *
+     * @param search
+     * @return
+     */
     public ListData<DiabetesSurvey> getList(CommonSearch search) {
+        if (!memberUtil.isLogin()) {
+            return new ListData<>();
+        }
 
-        return null;
+        int page = Math.max(search.getPage(), 1);
+        int limit = search.getLimit();
+        limit = limit < 1 ? 10 : limit;
+        int offset = (page - 1) * limit; // 레코드 시작 번호
+
+        Member member = memberUtil.getMember(); // 현재 로그인한 회원 정보
+
+        String sql = "SELECT s.*, m.email, m.name, m.mobile FROM SURVEY_DIABETES s " +
+                " LEFT JOIN MEMBER m ON s.memberSeq = m.seq WHERE memberSeq = ? " +
+                " ORDER BY createdAt DESC LIMIT ?, ?";
+
+        List<DiabetesSurvey> items = jdbcTemplate.query(sql, this::mapper, member.getSeq(), offset, limit);
+
+        int total = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM SURVEY_DIABETES WHERE memberSeq = ?", int.class, member.getSeq());
+
+        // Pagination(int page, int total, int range, int limit, HttpServletRequest request)
+        Pagination pagination = new Pagination(page, total, 10, limit, request);
+
+        return new ListData<>(items, pagination);
     }
 
     private DiabetesSurvey mapper(ResultSet rs, int i) throws SQLException {
