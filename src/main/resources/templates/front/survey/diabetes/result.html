@@ -3,7 +3,11 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{front/layouts/main}">
 
-<main layout:fragment="content">
+<main layout:fragment="content" th:object="${item}">
+    <h1 th:text="${pageTitle}"></h1>
+    <div class="result-box" th:text="*{diabetes ? #messages.msg('diabetes.HIGH') : #messages.msg('diabetes.LOW')}"></div>
+    <dl>
 
+    </dl>
 </main>
 </html>
