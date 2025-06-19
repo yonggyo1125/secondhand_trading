@@ -39,6 +39,6 @@ public class DiabetesSurveyService {
 
         repository.save(item);
 
-
+        return repository.findById(item.getSeq()).orElse(null);
     }
 }
