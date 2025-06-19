@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.koreait.member.entities.Member;
 import org.koreait.member.libs.MemberUtil;
 import org.koreait.survey.diabetes.controllers.RequestDiabetesSurvey;
+import org.koreait.survey.diabetes.entities.DiabetesSurvey;
 import org.koreait.survey.diabetes.repositories.DiabetesSurveyRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Lazy;
@@ -19,7 +20,7 @@ public class DiabetesSurveyService {
     private final MemberUtil memberUtil;
     private final ModelMapper mapper;
 
-    public void process(RequestDiabetesSurvey form) {
+    public DiabetesSurvey process(RequestDiabetesSurvey form) {
         /**
          * 1. 설문 답변으로 당뇨 고위험군 예측 결과 가져오기
          * 2. 로그인한 회원 정보 가져오기
@@ -27,8 +28,17 @@ public class DiabetesSurveyService {
          */
 
         boolean diabetes = predictService.isDiabetes(form);
-
         Member member = memberUtil.getMember();
+        double bmi = predictService.getBmi(form.getHeight(), form.getWeight());
+
+        DiabetesSurvey item = mapper.map(form, DiabetesSurvey.class);
+
+        item.setDiabetes(diabetes);
+        item.setBmi(bmi);
+        item.setMember(member);
+
+        repository.save(item);
+
 
     }
 }
