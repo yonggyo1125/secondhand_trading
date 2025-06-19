@@ -6,6 +6,7 @@ import org.koreait.global.entities.BaseEntity;
 import org.koreait.member.entities.Member;
 import org.koreait.survey.diabetes.constants.SmokingHistory;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -16,7 +17,7 @@ public class DiabetesSurvey extends BaseEntity {
     private Long seq;
 
     @Column("memberSeq")
-    private Member member;
+    private Long memberSeq;
 
     private Gender gender;
     private int age;
@@ -39,4 +40,7 @@ public class DiabetesSurvey extends BaseEntity {
     private double bloodGlucoseLevel;
 
     private boolean diabetes;
+
+    @Transient
+    private Member member;
 }
