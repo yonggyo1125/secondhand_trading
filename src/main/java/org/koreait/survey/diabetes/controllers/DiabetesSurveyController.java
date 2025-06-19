@@ -53,7 +53,7 @@ public class DiabetesSurveyController {
         return SmokingHistory.values();
     }
 
-    @GetMapping("/step1")
+    @GetMapping({"", "/step1"})
     public String step1(@ModelAttribute RequestDiabetesSurvey form, Model model) {
         commonProcess("step", model);
 
