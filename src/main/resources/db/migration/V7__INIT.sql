@@ -6,6 +6,12 @@ CREATE TABLE SURVEY_DIABETES (
     hypertension TINYINT(1),
     heartDisease TINYINT(1),
     smokingHistory ENUM('NO_INFO', 'CURRENT', 'EVER', 'FORMER', 'NEVER', 'NOT_CURRENT') DEFAULT 'NO_INFO',
+    height FLOAT,
+    weight FLOAT,
+    bmi FLOAT,
+    hbA1c FLOAT,
+    bloodGlucoseLevel FLOAT,
+    diabetes TINYINT(1),
     FOREIGN KEY(memberSeq) REFERENCES MEMBER(seq),
     PRIMARY KEY(seq)
 );
