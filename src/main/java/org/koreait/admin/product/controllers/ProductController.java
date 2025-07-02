@@ -3,6 +3,8 @@ package org.koreait.admin.product.controllers;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.koreait.admin.global.controllers.CommonController;
+import org.koreait.file.constants.FileStatus;
+import org.koreait.file.services.FileInfoService;
 import org.koreait.product.constants.ProductStatus;
 import org.koreait.product.services.ProductUpdateService;
 import org.springframework.stereotype.Controller;
@@ -22,6 +24,8 @@ import java.util.UUID;
 public class ProductController extends CommonController {
 
     private final ProductUpdateService updateService;
+    private final FileInfoService fileInfoService;
+
 
     @Override
     @ModelAttribute("mainCode")
@@ -76,6 +80,12 @@ public class ProductController extends CommonController {
         commonProcess(mode.equals("edit") ? "register": "update", model);
 
         if (errors.hasErrors()) {
+            // 검증 실패시에 업로드된 파일 정보를 유지
+            String gid = form.getGid();
+            form.setListImages(fileInfoService.getList(gid, "list", FileStatus.ALL));
+            form.setMainImages(fileInfoService.getList(gid, "main", FileStatus.ALL));
+            form.setEditorImages(fileInfoService.getList(gid, "editor", FileStatus.ALL));
+
             return "admin/product/" + (mode.equals("edit") ? "update" : "register");
         }
 

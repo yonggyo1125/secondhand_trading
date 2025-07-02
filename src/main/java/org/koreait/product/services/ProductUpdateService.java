@@ -2,6 +2,7 @@ package org.koreait.product.services;
 
 import lombok.RequiredArgsConstructor;
 import org.koreait.admin.product.controllers.RequestProduct;
+import org.koreait.file.services.FileUploadService;
 import org.koreait.product.entities.Product;
 import org.koreait.product.repositories.ProductRepository;
 import org.springframework.context.annotation.Lazy;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ProductUpdateService {
     private final ProductRepository repository;
+    private final FileUploadService uploadService;
 
     public Product process(RequestProduct form) {
         String mode = form.getMode();
@@ -33,6 +35,9 @@ public class ProductUpdateService {
 
 
         repository.save(item);
+
+        // 파일 업로드 완료 처리
+        uploadService.processDone(form.getGid());
 
         return item;
     }
