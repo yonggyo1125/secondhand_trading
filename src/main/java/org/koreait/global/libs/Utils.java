@@ -12,7 +12,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.LocaleResolver;
 
 import java.util.Locale;
-import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -97,7 +96,7 @@ public class Utils {
         try {
             FileInfo item = infoService.get(seq);
             long folder = seq % 10L;
-            url = String.format("%s%s/thumbs/%s/%s_%s_%s_%s%s", request.getContextPath(), fileProperties.getUrl(), folder, width, height, crop, seq, Objects.requireNonNullElse(item.getExtension(), ""));
+            url = String.format("%s/file/thumb?seq=%s&width=%s&height=%s&crop=true", request.getContextPath(), seq, width, height);
         } catch (Exception e) {
             e.printStackTrace();
         }
