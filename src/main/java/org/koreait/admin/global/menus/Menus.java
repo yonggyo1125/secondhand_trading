@@ -28,7 +28,8 @@ public class Menus {
         // 상품 관리 메뉴
         menus.put("product", List.of(
                 new Menu("list", "상품목록", "/admin/product"),
-                new Menu("register", "상품등록", "/admin/product/register")
+                new Menu("register", "상품등록", "/admin/product/register"),
+                new Menu("category", "분류관리", "/admin/product/category")
         ));
     }
 

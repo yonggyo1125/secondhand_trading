@@ -60,6 +60,20 @@ public class ProductController extends CommonController {
         return "admin/product/list";
     }
 
+    /**
+     * 목록에서 상품 정보 수정과 삭제
+     * @return
+     */
+    @RequestMapping(method={RequestMethod.PATCH, RequestMethod.DELETE})
+    public String listPs(@RequestParam(name="idx", required = false) List<Integer> idxes, Model model) {
+
+        updateService.processList(idxes);
+
+        // 처리가 완료되면 목록을 갱신
+        model.addAttribute("script", "parent.location.reload()");
+        return "common/_execute_script";
+    }
+
     // 상품 등록
     @GetMapping("/register")
     public String register(@ModelAttribute RequestProduct form, Model model) {
@@ -108,6 +122,19 @@ public class ProductController extends CommonController {
     }
 
     /**
+     * 상품 분류 관리
+     *
+     * @param model
+     * @return
+     */
+    @GetMapping("/category")
+    public String category(Model model) {
+        commonProcess("category", model);
+
+        return "admin/product/category";
+    }
+
+    /**
      * 공통 처리 부분
      * @param code
      * @param model
@@ -126,6 +153,8 @@ public class ProductController extends CommonController {
 
         } else if (code.equals("list")) {
             pageTitle = "상품목록";
+        } else if (code.equals("category")) {
+            pageTitle = "분류관리";
         }
 
         model.addAttribute("pageTitle", pageTitle);

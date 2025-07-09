@@ -72,6 +72,7 @@ public class ProductInfoService {
         sb2.append(countSql);
 
         List<String> arrWhere = new ArrayList<>();
+        arrWhere.add("deletedAt IS NULL");
 
         /* 상품 등록일자 검색 처리 S */
         if (sDate != null) {
