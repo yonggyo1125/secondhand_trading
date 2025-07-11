@@ -9,9 +9,15 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 import org.springframework.web.servlet.LocaleResolver;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -76,6 +82,25 @@ public class Utils {
         Locale locale = localeResolver.resolveLocale(request);
 
         return messageSource.getMessage(code, null, locale);
+    }
+
+    public List<String> getMessages(String[] codes) {
+        return Arrays.stream(codes)
+                .map(this::getMessage).toList();
+    }
+
+    /**
+     * 커맨드 객체 검증 실패 메세지 처리(REST)
+     *
+     * @param errors
+     * @return
+     */
+    public Map<String, List<String>> getErrorMessages(Errors errors) {
+        // 필드별 검증 실패 메세지  - rejectValue, 커맨드 객체 검증(필드)
+        Map<String, List<String>> messages = errors.getFieldErrors()
+                    .stream()
+                .collect(Collectors.toMap(FieldError::getField, f -> getMessages(f.getCodes())));
+        // 글로벌 검증 실패 메세지 - reject
     }
 
     public String getParam(String name) {
