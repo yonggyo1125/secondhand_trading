@@ -90,7 +90,12 @@ public class Utils {
         ms.setUseCodeAsDefaultMessage(false);
             try {
                 return Arrays.stream(codes)
-                        .map(this::getMessage).toList();
+                        .map(c -> {
+                            try {
+                                return getMessage(c);
+                            } catch (Exception e) {}
+                            return "";
+                        }).filter(s -> !s.isBlank()).toList();
             } finally {
                 ms.setUseCodeAsDefaultMessage(true);
             }
