@@ -2,13 +2,13 @@ package org.koreait.global.advices;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.koreait.global.annotations.ApplyCommonController;
 import org.koreait.global.exceptions.CommonException;
 import org.koreait.global.exceptions.script.AlertBackException;
 import org.koreait.global.exceptions.script.AlertException;
 import org.koreait.global.exceptions.script.AlertRedirectException;
 import org.koreait.global.libs.Utils;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
-@ControllerAdvice(annotations = Controller.class)
+@ControllerAdvice(annotations = ApplyCommonController.class)
 public class CommonControllerAdvice {
     private final Utils utils;
 

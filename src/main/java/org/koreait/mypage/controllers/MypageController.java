@@ -1,12 +1,14 @@
 package org.koreait.mypage.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.koreait.global.annotations.ApplyCommonController;
 import org.koreait.global.libs.Utils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@ApplyCommonController
 @RequestMapping("/mypage")
 @RequiredArgsConstructor
 public class MypageController {
