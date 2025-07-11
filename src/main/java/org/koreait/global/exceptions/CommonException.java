@@ -3,7 +3,6 @@ package org.koreait.global.exceptions;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.Errors;
 
 import java.util.List;
 import java.util.Map;
@@ -19,8 +18,8 @@ public class CommonException extends RuntimeException {
         this.status = status;
     }
 
-    public CommonException(Errors errors, HttpStatus status) {
+    public CommonException(Map<String, List<String>> errorMessages, HttpStatus status) {
         this.status = status;
-
+        this.errorMessages = errorMessages;
     }
 }
