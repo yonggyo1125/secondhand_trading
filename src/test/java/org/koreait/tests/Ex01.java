@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -28,7 +29,7 @@ public class Ex01 {
 
         mockMvc.perform(post("/test2")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
+                .content(json).with(csrf().asHeader()))
                 .andDo(print());
     }
 }
