@@ -7,6 +7,7 @@ import org.koreait.file.services.FileInfoService;
 import org.koreait.global.configs.FileProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.MessageSource;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
@@ -85,9 +86,15 @@ public class Utils {
     }
 
     public List<String> getMessages(String[] codes) {
-        return Arrays.stream(codes)
-                .map(this::getMessage).toList();
-    }
+        ResourceBundleMessageSource ms = (ResourceBundleMessageSource) messageSource;
+        ms.setUseCodeAsDefaultMessage(false);
+            try {
+                return Arrays.stream(codes)
+                        .map(this::getMessage).toList();
+            } finally {
+                ms.setUseCodeAsDefaultMessage(true);
+            }
+        }
 
     /**
      * 커맨드 객체 검증 실패 메세지 처리(REST)
