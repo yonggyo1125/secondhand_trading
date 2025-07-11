@@ -1,6 +1,9 @@
 package org.koreait.file.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
@@ -49,6 +52,10 @@ public class FileController {
         return items;
     }
 
+    @Operation(summary = "파일 등록번호로 파일 정보 한개 조회")
+    @Parameters({
+            @Parameter(name="seq", in= ParameterIn.PATH, required = true, description = "파일 등록 번호")
+    })
     @GetMapping("/info/{seq}")
     public FileInfo info(Long seq) {
         FileInfo item = infoService.get(seq);
