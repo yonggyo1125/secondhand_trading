@@ -7,6 +7,12 @@ import org.springframework.data.annotation.CreatedBy;
 
 @Data
 @Entity
+@Table(indexes = {
+        @Index(name="idx_fileinfo_gid1", columnList = "gid,createdAt"),
+        @Index(name="idx_fileinfo_gid2", columnList = "gid,done,createdAt"),
+        @Index(name="idx_fileinfo_location1", columnList = "gid,location,createdAt"),
+        @Index(name="idx_fileinfo_location2", columnList = "gid,location,done,createdAt")
+})
 public class FileInfo extends BaseEntity {
     @Id
     @GeneratedValue
