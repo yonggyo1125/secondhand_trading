@@ -13,7 +13,10 @@ import org.koreait.member.entities.Member;
 import org.koreait.member.entities.QMember;
 import org.koreait.member.repositories.MemberRepository;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,11 +27,10 @@ import org.springframework.util.StringUtils;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import static org.springframework.data.domain.Sort.Order.desc;
 
 @Lazy
 @Service
@@ -91,75 +93,22 @@ public class MemberInfoService implements UserDetailsService {
                 fields = member.name.concat(member.email)
                         .concat(member.mobile);
             }
+            andBuilder.and(fields.contains(skey));
         }
 
-//        int offset = (page - 1) * limit; // 레코드 시작 번호
-//
-//
-//        List<String> addWhere = new ArrayList<>();
-//        List<Object> params = new ArrayList<>();
-//
-//        String sopt = search.getSopt();
-//        String skey = search.getSkey();
-//        sopt = StringUtils.hasText(sopt) ? sopt : "ALL";
-//        /**
-//         * 키워드 검색
-//         * sopt: 검색 옵션
-//         *      NAME : 회원명
-//         *      EMAIL : 이메일
-//         *      MOBILE : 휴대전화번호
-//         *      ALL : 통합 검색 - NAME + EMAIL + MOBILE
-//         */
-//        if (StringUtils.hasText(skey)) { // 검색 키워드가 있는 경우
-//            if (sopt.equalsIgnoreCase("NAME")) { // 회원명 검색
-//                addWhere.add("name LIKE ?");
-//            } else if (sopt.equalsIgnoreCase("EMAIL")) { // 이메일 주소 검색
-//                addWhere.add("email LIKE ?");
-//            } else if (sopt.equalsIgnoreCase("MOBILE")) { // 휴대전화번호 검색
-//                addWhere.add("mobile LIKE ?");
-//            } else { // 통합 검색
-//                addWhere.add("CONCAT(name, email, mobile) LIKE ?");
-//            }
-//
-//            params.add("%" + skey + "%");
-//        }
-//
-//        // 권한 조건 검색 S
-//        List<Authority> authorities = search.getAuthority();
-//        if (authorities != null && !authorities.isEmpty()) {
-//
-//            addWhere.add(" authority IN (" + Stream.generate(() -> "?").limit(authorities.size()).collect(Collectors.joining(",")) + ")");
-//
-//            authorities.forEach(authority ->  params.add(authority.name()));
-//
-//        }
-//        // 권한 조건 검색 E
-//
-//        StringBuffer sb = new StringBuffer(2000);
-//        StringBuffer sb2 = new StringBuffer(2000);
-//        sb.append("SELECT * FROM MEMBER");
-//        sb2.append("SELECT COUNT(*) FROM MEMBER");
-//
-//        if (!addWhere.isEmpty()) {
-//            String where = " WHERE " + String.join(" AND ", addWhere);
-//            sb.append(where);
-//            sb2.append(where);
-//        }
-//
-//        sb.append(" ORDER BY createdAt DESC");
-//        sb.append(" LIMIT ?, ?");
-//
-//
-//        int total = jdbcTemplate.queryForObject(sb2.toString(), int.class, params.toArray()); // 검색 조건에 다른 전체 레코드 갯수
-//
-//        params.add(offset);
-//        params.add(limit);
-//
-//        List<Member> items = jdbcTemplate.query(sb.toString(), this::mapper, params.toArray());
+        // 권한 조건 검색 S
+        List<Authority> authorities = search.getAuthority();
+        if (!authorities.isEmpty()) {
+            andBuilder.and(member.authority.in(authorities));
+        }
+        // 권한 조건 검색 E
 
+        Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(desc("createdAt")));
 
-
-        Pagination pagination = new Pagination(page, total, 10, 20, request);
+        Page<Member> data = repository.findAll(andBuilder, pageable);
+        List<Member> items = data.getContent();
+        long total = data.getTotalElements();
+        Pagination pagination = new Pagination(page, (int)total, 10, limit, request);
 
 
         return new ListData<>(items, pagination);
