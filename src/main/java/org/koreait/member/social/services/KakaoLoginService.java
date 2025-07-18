@@ -1,6 +1,7 @@
 package org.koreait.member.social.services;
 
 import lombok.RequiredArgsConstructor;
+import org.koreait.global.exceptions.script.AlertRedirectException;
 import org.koreait.global.libs.Utils;
 import org.koreait.member.social.entities.AuthToken;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,20 +33,17 @@ public class KakaoLoginService implements SocialLoginService {
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        body.add("client_id", "29ffd877be5f6a7f4d4eb446b694e494");
-        body.add("redirect_uri", "http://localhost:3000/member/social/callback/kakao");
-        body.add("code", "6WNDNaHrGRJhyjQQvm2EgC6nSgXSRjktivHHBKZpsoTFPKJ9mNXMrwAAAAQKFzVXAAABmBus90eUJG13ldIf8A");
+        body.add("client_id", apiKey);
+        body.add("redirect_uri", utils.getUrl("/member/social/callback/kakao"));
+        body.add("code", code);
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
-
 
         String requestUrl = "https://kauth.kakao.com/oauth/token";
 
         ResponseEntity<AuthToken> response = restTemplate.exchange(URI.create(requestUrl), HttpMethod.POST, request, AuthToken.class);
 
-        HttpStatusCode status = response.getStatusCode();
-        System.out.print("status:" + status);
-        System.out.println(response.getBody());
+        checkSuccess(response.getStatusCode());
 
         // access Token으로 회원정보 조회
         AuthToken authToken = response.getBody();
@@ -57,9 +55,11 @@ public class KakaoLoginService implements SocialLoginService {
         request = new HttpEntity<>(headers);
         ResponseEntity<Map> res = restTemplate.exchange(URI.create(requestUrl), HttpMethod.POST, request, Map.class);
 
+        checkSuccess(res.getStatusCode());
+
         Map resBody = res.getBody();
         long id = (Long)resBody.get("id");
-        return "";
+        return "" + id;
     }
 
     @Override
@@ -78,5 +78,11 @@ public class KakaoLoginService implements SocialLoginService {
         String redirectUri = utils.getUrl("/member/social/callback/kakao");
 
         return String.format("https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=%s&redirect_uri=%s&state=%s", apiKey, redirectUri, Objects.requireNonNullElse(redirectUrl, ""));
+    }
+
+    private void checkSuccess(HttpStatusCode status) {
+        if (!status.is2xxSuccessful()) {
+            throw new AlertRedirectException(utils.getMessage("UnAuthorized.social"), "/member/login", HttpStatus.UNAUTHORIZED);
+        }
     }
 }
