@@ -10,6 +10,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
+import java.util.Map;
 
 
 @SpringBootTest
@@ -27,7 +28,7 @@ public class AccessTokenTest {
         body.add("grant_type", "authorization_code");
         body.add("client_id", "29ffd877be5f6a7f4d4eb446b694e494");
         body.add("redirect_uri", "http://localhost:3000/member/social/callback/kakao");
-        body.add("code", "tZXsJS4QLu_j64M03XA8O5ejLQG51CtzDN64-u68TAb6we0moRRHcwAAAAQKFxZiAAABmBuNq4qGtS2__sNdBQ");
+        body.add("code", "6WNDNaHrGRJhyjQQvm2EgC6nSgXSRjktivHHBKZpsoTFPKJ9mNXMrwAAAAQKFzVXAAABmBus90eUJG13ldIf8A");
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
 
@@ -39,5 +40,20 @@ public class AccessTokenTest {
         HttpStatusCode status = response.getStatusCode();
         System.out.print("status:" + status);
         System.out.println(response.getBody());
+
+        // access Token으로 회원정보 조회
+        AuthToken authToken = response.getBody();
+        requestUrl = "https://kapi.kakao.com/v2/user/me";
+        headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setBearerAuth(authToken.getAccessToken());
+
+        request = new HttpEntity<>(headers);
+        ResponseEntity<Map> res = restTemplate.exchange(URI.create(requestUrl), HttpMethod.POST, request, Map.class);
+
+        Map resBody = res.getBody();
+        long id = (Long)resBody.get("id");
+        System.out.println(id);
+
     }
 }

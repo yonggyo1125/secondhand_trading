@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.koreait.member.controllers.RequestJoin;
 import org.koreait.member.entities.Member;
 import org.koreait.member.repositories.MemberRepository;
+import org.koreait.member.social.constants.SocialType;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Lazy
 @Service
@@ -39,6 +41,8 @@ public class JoinService {
         member.setPassword(hash);
         member.setMobile(mobile);
         member.setCredentialChangedAt(LocalDateTime.now());
+        member.setSocialType(Objects.requireNonNullElse(form.getSocialType(), SocialType.NONE));
+        member.setSocialToken(form.getSocialToken());
 
         repository.saveAndFlush(member);
 
