@@ -37,7 +37,7 @@ public class SocialController {
         // 로그인 처리
         if (service.login(token)) {
             // 로그인 성공시에는 redirectUrl 또는 메인페이지로 이동
-            return StringUtils.hasText(redirectUrl) ? redirectUrl : "/";
+            return "redirect:" + (StringUtils.hasText(redirectUrl) ? redirectUrl : "/");
         }
 
         // 로그인 실패시에는 아직 소셜 회원으로 가입된 것이 아니므로 가입 화면 이동
