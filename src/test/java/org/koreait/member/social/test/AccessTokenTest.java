@@ -34,5 +34,9 @@ public class AccessTokenTest {
         String requestUrl = "https://kauth.kakao.com/oauth/token";
 
         ResponseEntity<String> response = restTemplate.exchange(URI.create(requestUrl), HttpMethod.POST, request, String.class);
+
+        HttpStatusCode status = response.getStatusCode();
+        System.out.print("status:" + status);
+        System.out.println(response.getBody());
     }
 }
