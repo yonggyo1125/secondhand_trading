@@ -24,7 +24,7 @@ public class NaverLoginService implements SocialLoginService {
     }
 
     @Override
-    public String getLoginUrl() {
+    public String getLoginUrl(String redirectUrl) {
         return "";
     }
 }

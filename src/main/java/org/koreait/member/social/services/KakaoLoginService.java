@@ -1,6 +1,7 @@
 package org.koreait.member.social.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +9,11 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class KakaoLoginService implements SocialLoginService {
+
+
+    @Value("${social.kakao.apikey}")
+    private String apiKey;
+
     @Override
     public String getToken(String code) {
         return "";
@@ -15,7 +21,7 @@ public class KakaoLoginService implements SocialLoginService {
 
     @Override
     public boolean login(String token) {
-        return false;
+        return true;
     }
 
     @Override
@@ -24,7 +30,10 @@ public class KakaoLoginService implements SocialLoginService {
     }
 
     @Override
-    public String getLoginUrl() {
-        return "";
+    public String getLoginUrl(String redirectUrl) {
+
+        String redirectUri = "";
+
+        return String.format("https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=%s&redirect_uri=%s&state=%s", apiKey, redirectUri, redirectUrl);
     }
 }

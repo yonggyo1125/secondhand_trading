@@ -26,7 +26,7 @@ public class SocialController {
     @GetMapping("/callback/{channel}")
     public String callback(@PathVariable("channel") String type, @RequestParam("code") String code, @RequestParam(name="state", required = false) String redirectUrl) {
 
-        SocialType socialType = SocialType.valueOf(type);
+        SocialType socialType = SocialType.valueOf(type.toUpperCase());
 
         SocialLoginService service = socialType == SocialType.NAVER ? naverLoginService : kakaoLoginService;
 
