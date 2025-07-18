@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.koreait.member.social.constants.SocialType;
+import org.springframework.util.StringUtils;
 
 @Data
 public class RequestJoin {
@@ -31,4 +32,8 @@ public class RequestJoin {
 
     private SocialType socialType;
     private String socialToken;
+
+    public boolean isSocial() {
+        return socialType != null && socialType != SocialType.NONE && StringUtils.hasText(socialToken);
+    }
 }
