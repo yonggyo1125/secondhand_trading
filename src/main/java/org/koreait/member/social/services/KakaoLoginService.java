@@ -3,6 +3,8 @@ package org.koreait.member.social.services;
 import lombok.RequiredArgsConstructor;
 import org.koreait.global.exceptions.script.AlertRedirectException;
 import org.koreait.global.libs.Utils;
+import org.koreait.member.repositories.MemberRepository;
+import org.koreait.member.social.constants.SocialType;
 import org.koreait.member.social.entities.AuthToken;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -22,6 +24,7 @@ import java.util.Objects;
 public class KakaoLoginService implements SocialLoginService {
     private final Utils utils;
     private final RestTemplate restTemplate;
+    private final MemberRepository memberRepository;
 
     @Value("${social.kakao.apikey}")
     private String apiKey;
@@ -69,7 +72,8 @@ public class KakaoLoginService implements SocialLoginService {
 
     @Override
     public boolean exists(String token) {
-        return false;
+
+        return memberRepository.existsBySocialTypeAndSocialToken(SocialType.KAKAO, token);
     }
 
     @Override
