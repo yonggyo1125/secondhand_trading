@@ -32,8 +32,9 @@ public class JoinService {
          *      - 숫자만 남기고 다 제거
          * 3. DB에 영구 저장
          */
+        String password = form.getPassword();
+        String hash = StringUtils.hasText(password) ? encoder.encode(password) : null;
 
-        String hash = encoder.encode(form.getPassword());
         String mobile = form.getMobile();
         if (StringUtils.hasText(mobile)) {
             mobile = mobile.replaceAll("\\D", "");

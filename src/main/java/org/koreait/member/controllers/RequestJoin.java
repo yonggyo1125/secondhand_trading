@@ -14,11 +14,9 @@ public class RequestJoin {
     @NotBlank
     private String email;
 
-    @NotBlank
     @Size(min=8)
     private String password;
 
-    @NotBlank
     private String confirmPassword;
 
     @NotBlank

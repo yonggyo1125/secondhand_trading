@@ -24,7 +24,7 @@ public class Member extends BaseEntity {
     @Column(length=75, unique = true, nullable = false)
     private String email;
 
-    @Column(length=65, nullable = false)
+    @Column(length=65)
     private String password;
 
     @Column(length=45, nullable = false)
