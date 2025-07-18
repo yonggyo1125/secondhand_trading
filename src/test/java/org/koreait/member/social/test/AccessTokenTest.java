@@ -26,7 +26,7 @@ public class AccessTokenTest {
         body.add("grant_type", "authorization_code");
         body.add("client_id", "29ffd877be5f6a7f4d4eb446b694e494");
         body.add("redirect_uri", "http://localhost:3000/member/social/callback/kakao");
-        body.add("code", "");
+        body.add("code", "PHwx5T9YR5iIBB3nrohplJ1js2Z3fg9KttqewkoLBdhhAWO9337YAwAAAAQKFxItAAABmBuFGfqoblpFv_zasg");
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
 
