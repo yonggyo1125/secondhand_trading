@@ -1,6 +1,7 @@
 package org.koreait.member.social.test;
 
 import org.junit.jupiter.api.Test;
+import org.koreait.member.social.entities.AuthToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.*;
@@ -26,14 +27,14 @@ public class AccessTokenTest {
         body.add("grant_type", "authorization_code");
         body.add("client_id", "29ffd877be5f6a7f4d4eb446b694e494");
         body.add("redirect_uri", "http://localhost:3000/member/social/callback/kakao");
-        body.add("code", "PHwx5T9YR5iIBB3nrohplJ1js2Z3fg9KttqewkoLBdhhAWO9337YAwAAAAQKFxItAAABmBuFGfqoblpFv_zasg");
+        body.add("code", "tZXsJS4QLu_j64M03XA8O5ejLQG51CtzDN64-u68TAb6we0moRRHcwAAAAQKFxZiAAABmBuNq4qGtS2__sNdBQ");
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
 
 
         String requestUrl = "https://kauth.kakao.com/oauth/token";
 
-        ResponseEntity<String> response = restTemplate.exchange(URI.create(requestUrl), HttpMethod.POST, request, String.class);
+        ResponseEntity<AuthToken> response = restTemplate.exchange(URI.create(requestUrl), HttpMethod.POST, request, AuthToken.class);
 
         HttpStatusCode status = response.getStatusCode();
         System.out.print("status:" + status);
