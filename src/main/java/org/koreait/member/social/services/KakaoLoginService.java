@@ -1,14 +1,21 @@
 package org.koreait.member.social.services;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.koreait.global.exceptions.script.AlertRedirectException;
 import org.koreait.global.libs.Utils;
+import org.koreait.member.entities.Member;
 import org.koreait.member.repositories.MemberRepository;
+import org.koreait.member.services.MemberInfoService;
 import org.koreait.member.social.constants.SocialType;
 import org.koreait.member.social.entities.AuthToken;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.*;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -25,6 +32,8 @@ public class KakaoLoginService implements SocialLoginService {
     private final Utils utils;
     private final RestTemplate restTemplate;
     private final MemberRepository memberRepository;
+    private final MemberInfoService infoService;
+    private final HttpSession session;
 
     @Value("${social.kakao.apikey}")
     private String apiKey;
@@ -67,6 +76,18 @@ public class KakaoLoginService implements SocialLoginService {
 
     @Override
     public boolean login(String token) {
+        Member member = memberRepository.findBySocialTypeAndSocialToken(SocialType.KAKAO, token);
+        if (member == null) {
+            return false;
+        }
+
+        UserDetails userDetails = infoService.loadUserByUsername(member.getEmail());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
+        SecurityContextHolder.getContext().setAuthentication(authentication); // 로그인 처리
+
+        session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
+
         return true;
     }
 
