@@ -27,6 +27,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.springframework.data.domain.Sort.Order.desc;
 
@@ -114,10 +115,12 @@ public class ProductInfoService {
 
         Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(desc("createdAt")));
         Page<Product> data = repository.findAll(andBuilder, pageable);
+        List<Product> items = data.getContent();
+        long total = data.getTotalElements();
 
         items.forEach(this::addInfo); // 추가 정보 처리
 
-        Pagination pagination = new Pagination(page, total, 10, limit, request);
+        Pagination pagination = new Pagination(page, (int)total, 10, limit, request);
 
         return new ListData<>(items, pagination);
     }
