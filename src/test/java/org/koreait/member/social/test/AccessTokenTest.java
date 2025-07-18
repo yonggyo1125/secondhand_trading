@@ -3,11 +3,12 @@ package org.koreait.member.social.test;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+
+import java.net.URI;
 
 
 @SpringBootTest
@@ -27,5 +28,11 @@ public class AccessTokenTest {
         body.add("redirect_uri", "http://localhost:3000/member/social/callback/kakao");
         body.add("code", "");
 
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
+
+
+        String requestUrl = "https://kauth.kakao.com/oauth/token";
+
+        ResponseEntity<String> response = restTemplate.exchange(URI.create(requestUrl), HttpMethod.POST, request, String.class);
     }
 }
