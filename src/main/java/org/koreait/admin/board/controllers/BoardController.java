@@ -4,6 +4,7 @@ import org.koreait.admin.global.controllers.CommonController;
 import org.koreait.member.constants.Authority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,8 +58,15 @@ public class BoardController extends CommonController {
      * @param model
      */
     private void commonProcess(String code, Model model) {
+        String pageTitle = "";
+        code = StringUtils.hasText(code) ? code : "list";
+        if (code.equals("register")) {
+            pageTitle =  "게시판 등록";
+        } else {
+            pageTitle = "게시판 목록";
+        }
 
-
+        model.addAttribute("pageTitle", pageTitle);
         model.addAttribute("subCode", code);
     }
 }

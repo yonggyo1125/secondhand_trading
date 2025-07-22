@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+ <th:block th:fragment="common" th:object="${requestBoard}">
+     <div class="error global" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
+     <h2>기본설정</h2>
+     <table class="table-cols">
+        <tr>
+            <th width="150">게시판 아이디</th>
+            <td th:if="*{mode == 'update'}">
+                <input type="hidden" name="bid" th:field="*{bid}">
+                <th:block th:text="*{bid}"></th:block>
+            </td>
+            <td th:unless="*{mode == 'update'}">
+                <input type="text" name="bid" th:field="*{bid}">
+                <div class="error" th:each="err : ${#fields.errors('bid')}" th:text="${err}"></div>
+            </td>
+        </tr>
+     </table>
+
+     <h2>분류설정</h2>
+
+     <h2>권한설정</h2>
+
+ </th:block>
+</html>
