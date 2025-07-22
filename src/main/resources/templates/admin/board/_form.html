@@ -156,16 +156,16 @@
          </tr>
 
          <tr>
-             <th width="150">목록권한</th>
+             <th width="150">댓글작성 권한</th>
              <td>
-                 <input type="radio" name="listAuthority" value="ALL" th:field="*{listAuthority}" id="listAuthority-ALL">
-                 <label for="listAuthority-ALL">비회원 + 회원 + 관리자</label>
+                 <input type="radio" name="commentAuthority" value="ALL" th:field="*{commentAuthority}" id="commentAuthority-ALL">
+                 <label for="commentAuthority-ALL">비회원 + 회원 + 관리자</label>
 
-                 <input type="radio" name="listAuthority" value="MEMBER" th:field="*{listAuthority}" id="listAuthority-MEMBER">
-                 <label for="listAuthority-MEMBER">회원 + 관리자</label>
+                 <input type="radio" name="commentAuthority" value="MEMBER" th:field="*{commentAuthority}" id="commentAuthority-MEMBER">
+                 <label for="commentAuthority-MEMBER">회원 + 관리자</label>
 
-                 <input type="radio" name="listAuthority" value="ADMIN" th:field="*{listAuthority}" id="listAuthority-ADMIN">
-                 <label for="listAuthority-ADMIN">관리자</label>
+                 <input type="radio" name="commentAuthority" value="ADMIN" th:field="*{commentAuthority}" id="commentAuthority-ADMIN">
+                 <label for="commentAuthority-ADMIN">관리자</label>
              </td>
          </tr>
      </table>
