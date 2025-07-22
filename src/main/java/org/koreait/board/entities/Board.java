@@ -22,6 +22,9 @@ public class Board extends BaseEntity {
     @Column(length=45, nullable = false)
     private String skin; // 게시판 스킨
 
+    @Lob
+    private String category; // 게시판 분류
+
     private boolean active; // 게시판 사용 여부, true - 사용, false : 미사용
     private boolean editor;  // 에디터 사용 여부
     private boolean imageUpload; // 에디터에 이미지 추가 기능 사용 여부
