@@ -48,5 +48,7 @@ public class BoardController extends CommonController {
      */
     private void commonProcess(String code, Model model) {
 
+
+        model.addAttribute("subCode", code);
     }
 }
