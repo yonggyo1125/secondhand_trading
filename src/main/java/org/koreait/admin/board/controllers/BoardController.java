@@ -1,6 +1,8 @@
 package org.koreait.admin.board.controllers;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.koreait.admin.board.validators.BoardValidator;
 import org.koreait.admin.global.controllers.CommonController;
 import org.koreait.member.constants.Authority;
 import org.springframework.stereotype.Controller;
@@ -13,8 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/admin/board")
 public class BoardController extends CommonController {
+
+    private final BoardValidator boardValidator;
 
     @Override
     @ModelAttribute("mainCode")
@@ -60,6 +65,8 @@ public class BoardController extends CommonController {
         String mode = form.getMode();
         mode = StringUtils.hasText(mode) ? mode : "register";
         commonProcess(mode, model);
+
+        boardValidator.validate(form, errors);
 
         if (errors.hasErrors()) {
             return "admin/board/" + mode;
