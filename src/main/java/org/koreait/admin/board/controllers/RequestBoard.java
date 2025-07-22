@@ -1,12 +1,16 @@
 package org.koreait.admin.board.controllers;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.koreait.member.constants.Authority;
 
 @Data
 public class RequestBoard {
+
+    @NotBlank
     private String bid; // 게시판 아이디
 
+    @NotBlank
     private String name; // 게시판 이름
 
     private int rowsForPage; // 한페이지당 레코드 갯수

@@ -1,6 +1,7 @@
 package org.koreait.admin.board.controllers;
 
 import org.koreait.admin.global.controllers.CommonController;
+import org.koreait.member.constants.Authority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,8 +36,17 @@ public class BoardController extends CommonController {
      * @return
      */
     @GetMapping("/register")
-    public String register(Model model) {
+    public String register(@ModelAttribute RequestBoard form, Model model) {
         commonProcess("register", model);
+
+        // 기본값 설정
+        form.setSkin("default");
+        form.setListAuthority(Authority.ALL);
+        form.setViewAuthority(Authority.ALL);
+        form.setWriteAuthority(Authority.ALL);
+        form.setCommentAuthority(Authority.ALL);
+        form.setRowsForPage(20);
+        form.setPageCount(10);
 
         return "admin/board/register";
     }
