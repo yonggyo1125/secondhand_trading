@@ -98,7 +98,7 @@
      </table>
 
      <h2>스킨설정</h2>
-     <table class="table-cols">
+     <table class="table-cols mb30">
          <tr>
              <th width="150">스킨 선택</th>
              <td>
@@ -112,6 +112,62 @@
      </table>
 
      <h2>권한설정</h2>
+     <table class="table-cols mb30">
+         <tr>
+             <th width="150">목록 권한</th>
+             <td>
+                 <input type="radio" name="listAuthority" value="ALL" th:field="*{listAuthority}" id="listAuthority-ALL">
+                 <label for="listAuthority-ALL">비회원 + 회원 + 관리자</label>
 
+                 <input type="radio" name="listAuthority" value="MEMBER" th:field="*{listAuthority}" id="listAuthority-MEMBER">
+                 <label for="listAuthority-MEMBER">회원 + 관리자</label>
+
+                 <input type="radio" name="listAuthority" value="ADMIN" th:field="*{listAuthority}" id="listAuthority-ADMIN">
+                 <label for="listAuthority-ADMIN">관리자</label>
+             </td>
+         </tr>
+
+         <tr>
+             <th width="150">글보기 권한</th>
+             <td>
+                 <input type="radio" name="viewAuthority" value="ALL" th:field="*{viewAuthority}" id="viewAuthority-ALL">
+                 <label for="viewAuthority-ALL">비회원 + 회원 + 관리자</label>
+
+                 <input type="radio" name="viewAuthority" value="MEMBER" th:field="*{viewAuthority}" id="viewAuthority-MEMBER">
+                 <label for="viewAuthority-MEMBER">회원 + 관리자</label>
+
+                 <input type="radio" name="viewAuthority" value="ADMIN" th:field="*{viewAuthority}" id="viewAuthority-ADMIN">
+                 <label for="viewAuthority-ADMIN">관리자</label>
+             </td>
+         </tr>
+
+         <tr>
+             <th width="150">글작성 권한</th>
+             <td>
+                 <input type="radio" name="writeAuthority" value="ALL" th:field="*{writeAuthority}" id="writeAuthority-ALL">
+                 <label for="writeAuthority-ALL">비회원 + 회원 + 관리자</label>
+
+                 <input type="radio" name="writeAuthority" value="MEMBER" th:field="*{writeAuthority}" id="writeAuthority-MEMBER">
+                 <label for="writeAuthority-MEMBER">회원 + 관리자</label>
+
+                 <input type="radio" name="writeAuthority" value="ADMIN" th:field="*{writeAuthority}" id="writeAuthority-ADMIN">
+                 <label for="writeAuthority-ADMIN">관리자</label>
+             </td>
+         </tr>
+
+         <tr>
+             <th width="150">목록권한</th>
+             <td>
+                 <input type="radio" name="listAuthority" value="ALL" th:field="*{listAuthority}" id="listAuthority-ALL">
+                 <label for="listAuthority-ALL">비회원 + 회원 + 관리자</label>
+
+                 <input type="radio" name="listAuthority" value="MEMBER" th:field="*{listAuthority}" id="listAuthority-MEMBER">
+                 <label for="listAuthority-MEMBER">회원 + 관리자</label>
+
+                 <input type="radio" name="listAuthority" value="ADMIN" th:field="*{listAuthority}" id="listAuthority-ADMIN">
+                 <label for="listAuthority-ADMIN">관리자</label>
+             </td>
+         </tr>
+     </table>
  </th:block>
 </html>
