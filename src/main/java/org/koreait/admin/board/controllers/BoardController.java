@@ -1,12 +1,15 @@
 package org.koreait.admin.board.controllers;
 
+import jakarta.validation.Valid;
 import org.koreait.admin.global.controllers.CommonController;
 import org.koreait.member.constants.Authority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -50,6 +53,19 @@ public class BoardController extends CommonController {
         form.setPageCount(10);
 
         return "admin/board/register";
+    }
+
+    @PostMapping("/save")
+    public String save(@Valid RequestBoard form, Errors errors, Model model) {
+        String mode = form.getMode();
+        mode = StringUtils.hasText(mode) ? mode : "register";
+        commonProcess(mode, model);
+
+        if (errors.hasErrors()) {
+            return "admin/board/" + mode;
+        }
+
+        return "redirect:/admin/board";
     }
 
     /**
