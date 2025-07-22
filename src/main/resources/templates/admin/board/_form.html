@@ -3,7 +3,7 @@
  <th:block th:fragment="common" th:object="${requestBoard}">
      <div class="error global" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
      <h2>기본설정</h2>
-     <table class="table-cols">
+     <table class="table-cols mb30">
         <tr>
             <th width="150">게시판 아이디</th>
             <td th:if="*{mode == 'update'}">
@@ -15,6 +15,23 @@
                 <div class="error" th:each="err : ${#fields.errors('bid')}" th:text="${err}"></div>
             </td>
         </tr>
+         <tr>
+             <th>게시판 이름</th>
+             <td>
+                 <input type="text" name="name" th:field="*{name}">
+                 <div class="error" th:each="err : ${#fields.errors('name')}" th:text="${err}"></div>
+             </td>
+         </tr>
+         <tr>
+            <th>사용여부</th>
+             <td>
+                 <input type="radio" name="active" value="true" th:field="*{active}" id="active-true">
+                 <label for="active-true">사용</label>
+
+                 <input type="radio" name="active" value="false" th:field="*{active}" id="active-false">
+                 <label for="active-false">미사용</label>
+             </td>
+         </tr>
      </table>
 
      <h2>분류설정</h2>
