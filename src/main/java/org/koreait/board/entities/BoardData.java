@@ -41,4 +41,10 @@ public class BoardData extends BaseEntity {
     private boolean notice; // 공지글 여부
     private boolean secret; // 비밀글 여부
 
+    private int viewCount; // 조회수
+
+    @Column(length=20)
+    private String ip; // 작성자 IP 주소
+
+    private String ua; // User-Agent 정보, 작성자의 브라우저 정보
 }
