@@ -25,10 +25,20 @@ public class BoardData extends BaseEntity {
     @Column(length=60)
     private String category; // 게시글 분류
 
+    @Column(length=60, nullable = false)
+    private String poster; // 작성자
+
+    @Column(length=65)
+    private String guestPw; // 비회원 게시글 수정, 삭제를 위한 비밀번호
+
     @Column(nullable = false)
     private String subject;
 
     @Lob
     @Column(nullable = false)
     private String content;
+
+    private boolean notice; // 공지글 여부
+    private boolean secret; // 비밀글 여부
+
 }
