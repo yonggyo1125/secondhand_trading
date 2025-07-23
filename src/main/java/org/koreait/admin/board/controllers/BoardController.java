@@ -4,24 +4,25 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.koreait.admin.board.validators.BoardConfigValidator;
 import org.koreait.admin.global.controllers.CommonController;
+import org.koreait.board.services.configs.BoardConfigInfoService;
 import org.koreait.board.services.configs.BoardConfigUpdateService;
+import org.koreait.global.annotations.ApplyCommonController;
 import org.koreait.member.constants.Authority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
+@ApplyCommonController
 @RequiredArgsConstructor
 @RequestMapping("/admin/board")
 public class BoardController extends CommonController {
 
     private final BoardConfigValidator boardConfigValidator;
     private final BoardConfigUpdateService configUpdateService;
+    private final BoardConfigInfoService configInfoService;
 
     @Override
     @ModelAttribute("mainCode")
@@ -60,6 +61,16 @@ public class BoardController extends CommonController {
         form.setPageCount(10);
 
         return "admin/board/register";
+    }
+
+    @GetMapping("/update/{bid}")
+    public String update(@PathVariable("bid") String bid, Model model) {
+        commonProcess("update", model);
+        RequestBoard item = configInfoService.getForm(bid);
+
+        model.addAttribute("requestBoard", item);
+
+        return "admin/board/update";
     }
 
     @PostMapping("/save")
