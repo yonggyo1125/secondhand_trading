@@ -3,8 +3,11 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{admin/layouts/main}">
 
-<section layout:fragment="content">
-    <h1 th:text="${pageTitle}"></h1>
+<section layout:fragment="content" th:object="${requestBoard}">
+    <h1>
+        <th:block  th:text="${pageTitle}"></th:block> -
+        <th:block th:text="*{name + '(' + bid + ')'}"></th:block>
+    </h1>
 
     <form name="frmSave" method="POST" th:action="@{/admin/board/save}" autocomplete="off">
         <input type="hidden" name="mode" value="update">
