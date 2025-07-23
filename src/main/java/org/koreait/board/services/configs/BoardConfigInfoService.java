@@ -1,20 +1,25 @@
 package org.koreait.board.services.configs;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.StringExpression;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.koreait.admin.board.controllers.RequestBoard;
 import org.koreait.board.entities.Board;
+import org.koreait.board.entities.QBoard;
 import org.koreait.board.exceptions.BoardNotFoundException;
 import org.koreait.board.repositories.BoardRepository;
 import org.koreait.global.search.CommonSearch;
 import org.koreait.global.search.ListData;
 import org.koreait.global.search.Pagination;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -27,6 +32,7 @@ public class BoardConfigInfoService {
 
     private final BoardRepository repository;
     private final HttpServletRequest request;
+    private final ModelMapper mapper;
 
     /**
      * 게시판 설정 한개 조회
@@ -43,6 +49,18 @@ public class BoardConfigInfoService {
     }
 
     /**
+     * 게시판 설정 수정시 필요한 커맨드 객체 형태로 조회
+     * 
+     * @param bid
+     * @return
+     */
+    public RequestBoard getForm(String bid) {
+        Board board = get(bid);
+
+        return mapper.map(board, RequestBoard.class);
+    }
+    
+    /**
      * 게시판 목록 조회
      *
      * @param search
@@ -57,9 +75,24 @@ public class BoardConfigInfoService {
         String skey = search.getSkey();
 
         BooleanBuilder andBuilder = new BooleanBuilder();
+        QBoard board = QBoard.board;
 
         // 키워드 검색 처리 S
+        sopt = StringUtils.hasText(sopt) ? sopt.toUpperCase() : "ALL";
+        if (StringUtils.hasText(skey)) {
+            skey = skey.trim();
 
+            StringExpression fields = null;
+            if (sopt.equals("BID")) {
+                fields = board.bid;
+            } else if (sopt.equals("NAME")) {
+                fields = board.name;
+            } else { // 통합 검색 BID + NAME
+                fields = board.bid.concat(board.name);
+            }
+
+            andBuilder.and(fields.contains(skey));
+        }
         // 키워드 검색 처리 E
 
         Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(desc("createdAt")));
