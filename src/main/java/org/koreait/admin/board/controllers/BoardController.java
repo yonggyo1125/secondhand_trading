@@ -17,7 +17,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@Controller("adminBoardController")
 @ApplyCommonController
 @RequiredArgsConstructor
 @RequestMapping("/admin/board")
