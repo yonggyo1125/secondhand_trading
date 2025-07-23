@@ -4,9 +4,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.koreait.admin.board.validators.BoardConfigValidator;
 import org.koreait.admin.global.controllers.CommonController;
+import org.koreait.board.entities.Board;
 import org.koreait.board.services.configs.BoardConfigInfoService;
 import org.koreait.board.services.configs.BoardConfigUpdateService;
 import org.koreait.global.annotations.ApplyCommonController;
+import org.koreait.global.search.CommonSearch;
+import org.koreait.global.search.ListData;
 import org.koreait.member.constants.Authority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,8 +38,12 @@ public class BoardController extends CommonController {
      * @return
      */
     @GetMapping({"", "/list"})
-    public String list(Model model) {
+    public String list(@ModelAttribute CommonSearch search, Model model) {
         commonProcess("list", model);
+
+        ListData<Board> data = configInfoService.getList(search);
+        model.addAttribute("items", data.getItems());
+        model.addAttribute("pagination", data.getPagination());
 
         return "admin/board/list";
     }
@@ -99,7 +106,9 @@ public class BoardController extends CommonController {
         String pageTitle = "";
         code = StringUtils.hasText(code) ? code : "list";
         if (code.equals("register")) {
-            pageTitle =  "게시판 등록";
+            pageTitle = "게시판 등록";
+        } else if (code.equals("update")) {
+            pageTitle = "게시판 수정";
         } else {
             pageTitle = "게시판 목록";
         }
