@@ -48,6 +48,8 @@ public class BoardController {
 
         if (memberUtil.isLogin()) {
             form.setPoster(memberUtil.getMember().getName());
+        } else {
+            form.setGuest(true);
         }
 
         return utils.tpl("board/write");

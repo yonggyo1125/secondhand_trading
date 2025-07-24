@@ -25,4 +25,6 @@ public class RequestBoard {
     private String content;
     private boolean notice; // 공지글 여부
     private boolean secret; // 비밀글 여부
+
+    private boolean guest; // 비회원 게시글 작성, 수정 여부
 }
