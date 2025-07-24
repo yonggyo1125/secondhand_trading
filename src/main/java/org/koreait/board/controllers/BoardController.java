@@ -5,6 +5,7 @@ import org.koreait.board.entities.Board;
 import org.koreait.board.services.configs.BoardConfigInfoService;
 import org.koreait.global.annotations.ApplyCommonController;
 import org.koreait.global.libs.Utils;
+import org.koreait.member.libs.MemberUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @ApplyCommonController
@@ -21,6 +23,7 @@ import java.util.List;
 public class BoardController {
 
     private final Utils utils;
+    private final MemberUtil memberUtil;
     private final BoardConfigInfoService configInfoService;
 
     @ModelAttribute("board")
@@ -38,8 +41,14 @@ public class BoardController {
 
     // 게시글 작성
     @GetMapping("/write/{bid}")
-    public String write(@PathVariable("bid") String bid, Model model) {
+    public String write(@PathVariable("bid") String bid, RequestBoard form, Model model) {
         commonProcess(bid, "write", model);
+        form.setBid(bid);
+        form.setGid(UUID.randomUUID().toString());
+
+        if (memberUtil.isLogin()) {
+            form.setPoster(memberUtil.getMember().getName());
+        }
 
         return utils.tpl("board/write");
     }
