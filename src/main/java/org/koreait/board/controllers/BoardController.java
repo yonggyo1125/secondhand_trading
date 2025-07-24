@@ -83,11 +83,13 @@ public class BoardController {
         List<String> addCommonScript = new ArrayList<>();
         List<String> addCss = new ArrayList<>();
         List<String> addScript = new ArrayList<>();
+        String pageTitle = board.getName(); // 게시판 명
 
 
         model.addAttribute("addCommonScript", addCommonScript);
         model.addAttribute("addScript", addScript);
         model.addAttribute("addCss", addCss);
+        model.addAttribute("pageTitle", pageTitle);
         model.addAttribute("board", board);
     }
 
