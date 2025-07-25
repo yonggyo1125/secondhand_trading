@@ -52,5 +52,26 @@ function fileUploadCallback(items) {
         const fileItem = dom.querySelector(".file-items");
 
         targetEl.append(fileItem);
+
+        const removeEl = fileItem.querySelector(".remove");
+        if (removeEl) {
+            const { fileManager } = commonLib;
+            removeEl.addEventListener("click", function() {
+                if (confirm('정말 삭제하겠습니까?')) {
+                    fileManager.delete(seq);
+                }
+            });
+        }
+
+        const insertEditorEl = fileItem.querySelector(".insert-editor");
+        if (insertEditorEl) {
+            insertEditorEl.addEventListener("click", () => insertEditorImage(fileUrl));
+        }
     }
+}
+
+// 파일 삭제 후 후속처리
+function fileDeleteCallback({seq}) {
+    const el = document.getElementById(`file-${seq}`);
+    if (el) el.parentElement.removeChild(el);
 }
