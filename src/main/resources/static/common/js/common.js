@@ -58,6 +58,34 @@ var commonLib = {
     }
 }
 
+/* 에디터 공통 */
+commonLib.loadEditor = function(el, height = 350) {
+    if (!ClassicEditor || !el) {
+        return Promise.resolve();
+    }
+
+    return new Promise((resolve, reject) => {
+        (async () => {
+            try {
+                const editor = await ClassicEditor.create(el);
+                resolve(editor);
+
+                editor.editing.view.change((writer) => {
+                    writer.setStyle(
+                        "height", `${height}px`,
+                        editor.editing.view.document.getRoot()
+                    );
+                });
+
+            } catch (err) {
+                console.error(err);
+                reject(err);
+            }
+        })();
+    });
+};
+
+
 /* window.alert를 SweetAlert2로 교체 */
 window.alert = function(message, callback) {
     parent.Swal.fire({
