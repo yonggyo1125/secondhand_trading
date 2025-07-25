@@ -5,11 +5,22 @@
         <dt th:text="#{작성자}"></dt>
         <dd>
             <input type="text" name="poster" th:field="*{poster}">
+
+            <span class="checkbox">
+                <input type="checkbox" name="secret" th:field="*{secret}" value="true" id="secret">
+                <label for="secret" th:text="#{비밀글}"></label>
+            </span>
+
             <div class="error" th:each="err : ${#fields.errors('poster')}" th:text="${err}"></div>
         </dd>
     </dl>
-    <dl>
 
+    <dl th:if="*{guest}">
+        <dt th:text="#{비밀번호}"></dt>
+        <dd>
+            <input type="password" name="guestPw" th:field="*{guestPw}">
+            <div class="error" th:each="err : ${#fields.errors('guestPw')}" th:text="${err}"></div>
+        </dd>
     </dl>
 </th:block>
 </html>
