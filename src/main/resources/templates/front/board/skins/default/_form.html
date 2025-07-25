@@ -40,6 +40,7 @@
             <textarea name="content" id="content"></textarea>
 
             <th:block th:if="${board.editor && board.imageUpload }">
+                <div class="uploaded-files editor-files"></div>
                 <button type="button" class="file-upload-btn" th:data-gid="*{gid}" data-location="editor" data-image-only="true" th:text="#{이미지_추가}"></button>
             </th:block>
 
@@ -49,8 +50,12 @@
     <dl th:if="${board.attachFile}">
         <dt th:text="#{파일첨부}"></dt>
         <dd>
+            <div class="uploaded-files attach-files"></div>
             <button type="button" class="file-upload-btn" th:data-gid="*{gid}" data-location="attach" th:text="#{파일업로드}"></button>
         </dd>
     </dl>
+
+    <script th:replace="~{common/_file_tpl::editor_tpl}"></script>
+    <script th:replace="~{common/_file_tpl::attach_tpl}"></script>
 </th:block>
 </html>
