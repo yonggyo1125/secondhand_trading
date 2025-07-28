@@ -59,7 +59,7 @@ public class BoardUpdateService {
         item.setSecret(form.isSecret());
 
         if (form.isGuest()) {
-            item.setGuestPw(encoder.encode(item.getGuestPw()));
+            item.setGuestPw(encoder.encode(form.getGuestPw()));
         }
 
         if (memberUtil.isAdmin()) {
