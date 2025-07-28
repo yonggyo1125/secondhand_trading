@@ -9,7 +9,7 @@ window.addEventListener("DOMContentLoaded", function() {
     // 위지윅 에디터 로드 E
 
     // 파일 삭제 이벤트 처리
-    const { fileManager } = commonLib;
+    const { fileManager, insertEditorImage } = commonLib;
     const removeEls = document.querySelectorAll(".file-items .remove");
     removeEls.forEach(el => {
         el.addEventListener("click", function() {
@@ -22,6 +22,14 @@ window.addEventListener("DOMContentLoaded", function() {
         });
     });
 
+    // 이미지를 에디터 본문 추가 이벤트 처리
+    const insertEditorEls = document.querySelectorAll(".file-items .insert-editor");
+    insertEditorEls.forEach(el => {
+        el.addEventListener("click", function() {
+            const { fileUrl } = this.dataset;
+            insertEditorImage(fileUrl);
+        });
+    });
 });
 
 
