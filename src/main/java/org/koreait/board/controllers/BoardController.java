@@ -1,14 +1,18 @@
 package org.koreait.board.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.koreait.board.entities.Board;
 import org.koreait.board.services.configs.BoardConfigInfoService;
+import org.koreait.file.constants.FileStatus;
+import org.koreait.file.services.FileInfoService;
 import org.koreait.global.annotations.ApplyCommonController;
 import org.koreait.global.libs.Utils;
 import org.koreait.member.libs.MemberUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -25,6 +29,7 @@ public class BoardController {
     private final Utils utils;
     private final MemberUtil memberUtil;
     private final BoardConfigInfoService configInfoService;
+    private final FileInfoService fileInfoService;
 
     @ModelAttribute("board")
     public Board getBoard() {
@@ -61,6 +66,22 @@ public class BoardController {
         commonProcess(seq, "update", model);
 
         return utils.tpl("board/update");
+    }
+
+    @PostMapping("/save")
+    public String save(@Valid RequestBoard form, Errors errors, Model model) {
+        String mode = form.getMode();
+        commonProcess(form.getBid(), mode, model);
+
+        if (errors.hasErrors()) {
+            String gid = form.getGid();
+            form.setEditorImages(fileInfoService.getList(gid, "editor", FileStatus.ALL));
+            form.setAttachFiles(fileInfoService.getList(gid, "attach", FileStatus.ALL));
+
+            return utils.tpl("board/" + mode);
+        }
+
+        return "redirect:/board/list/" + form.getBid();
     }
 
     // 게시글 보기

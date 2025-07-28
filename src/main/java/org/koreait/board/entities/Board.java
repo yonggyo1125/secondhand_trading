@@ -5,9 +5,11 @@ import lombok.Data;
 import org.koreait.global.entities.BaseEntity;
 import org.koreait.member.constants.Authority;
 
+import java.io.Serializable;
+
 @Data
 @Entity
-public class Board extends BaseEntity {
+public class Board extends BaseEntity implements Serializable {
     @Id
     @Column(length=45)
     private String bid; // 게시판 아이디
