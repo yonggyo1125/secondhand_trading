@@ -8,6 +8,20 @@ window.addEventListener("DOMContentLoaded", function() {
         })
     // 위지윅 에디터 로드 E
 
+    // 파일 삭제 이벤트 처리
+    const { fileManager } = commonLib;
+    const removeEls = document.querySelectorAll(".file-items .remove");
+    removeEls.forEach(el => {
+        el.addEventListener("click", function() {
+            if (!confirm('정말 삭제하겠습니까?')) {
+                return;
+            }
+
+            const { seq } = this.dataset;
+            fileManager.delete(seq);
+        });
+    });
+
 });
 
 

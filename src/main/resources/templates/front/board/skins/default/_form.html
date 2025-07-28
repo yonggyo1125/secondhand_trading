@@ -57,7 +57,13 @@
     <dl th:if="${board.attachFile}">
         <dt th:text="#{파일첨부}"></dt>
         <dd>
-            <div class="uploaded-files attach-files"></div>
+            <div class="uploaded-files attach-files">
+                <span th:if="*{attachFiles != null && !attachFiles.isEmpty()}"
+                      th:each="item : *{attachFiles}" th:object="${item}" class="file-items" th:id="*{'file-' + seq}">
+                    <a th:href="@{/file/download/{seq}(seq=*{seq})}" th:text="*{fileName}"></a>
+                    <i class="xi-close remove" th:data-seq="*{seq}"></i>
+                </span>
+            </div>
             <button type="button" class="file-upload-btn" th:data-gid="*{gid}" data-location="attach" th:text="#{파일업로드}"></button>
         </dd>
     </dl>
