@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.koreait.board.entities.Board;
 import org.koreait.board.services.configs.BoardConfigInfoService;
+import org.koreait.board.validators.BoardValidator;
 import org.koreait.file.constants.FileStatus;
 import org.koreait.file.services.FileInfoService;
 import org.koreait.global.annotations.ApplyCommonController;
@@ -30,6 +31,7 @@ public class BoardController {
     private final MemberUtil memberUtil;
     private final BoardConfigInfoService configInfoService;
     private final FileInfoService fileInfoService;
+    private final BoardValidator boardValidator;
 
     @ModelAttribute("board")
     public Board getBoard() {

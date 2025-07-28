@@ -1,6 +1,5 @@
 package org.koreait.board.validators;
 
-import lombok.RequiredArgsConstructor;
 import org.koreait.board.controllers.RequestBoard;
 import org.koreait.global.validators.PasswordValidator;
 import org.springframework.context.annotation.Lazy;
@@ -12,8 +11,7 @@ import org.springframework.validation.Validator;
 import java.util.Objects;
 
 @Lazy
-@RequiredArgsConstructor
-@Component("frontBoardValidator")
+@Component
 public class BoardValidator implements Validator, PasswordValidator {
 
     @Override
