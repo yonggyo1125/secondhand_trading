@@ -75,6 +75,14 @@ public class BoardController {
         String mode = form.getMode();
         commonProcess(form.getBid(), mode, model);
 
+        if (mode.equals("update")) {
+
+        } else { // 게시글 등록시
+            form.setGuest(!memberUtil.isLogin());
+        }
+
+        boardValidator.validate(form, errors);
+
         if (errors.hasErrors()) {
             String gid = form.getGid();
             form.setEditorImages(fileInfoService.getList(gid, "editor", FileStatus.ALL));
