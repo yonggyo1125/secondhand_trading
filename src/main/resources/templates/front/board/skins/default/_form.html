@@ -40,7 +40,14 @@
             <textarea name="content" id="content" th:field="*{content}"></textarea>
 
             <th:block th:if="${board.editor && board.imageUpload }">
-                <div class="uploaded-files editor-files"></div>
+                <div class="uploaded-files editor-files">
+                    <span th:if="*{editorImages != null && !editorImages.isEmpty()}"
+                          th:each="item : *{editorImages}" th:object="${item}" class="file-items" th:id="*{'file-' + seq}">
+                        <a th:href="@{/file/download/{seq}(seq=*{seq})}" th:text="*{fileName}"></a>
+                        <i class="xi-upload insert-editor" th:data-file-url="*{fileUrl}"></i>
+                        <i class="xi-close remove" th:data-seq="*{seq}"></i>
+                    </span>
+                </div>
                 <button type="button" class="file-upload-btn" th:data-gid="*{gid}" data-location="editor" data-image-only="true" th:text="#{이미지_추가}"></button>
             </th:block>
 
