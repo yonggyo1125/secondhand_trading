@@ -17,6 +17,8 @@ public class RequestBoard {
     @NotBlank
     private String gid;
 
+    private String category;
+
     @NotBlank
     private String poster;
     private String guestPw;

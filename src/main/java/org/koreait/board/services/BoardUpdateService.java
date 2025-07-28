@@ -7,8 +7,10 @@ import org.koreait.board.entities.Board;
 import org.koreait.board.entities.BoardData;
 import org.koreait.board.repositories.BoardDataRepository;
 import org.koreait.board.services.configs.BoardConfigInfoService;
+import org.koreait.file.services.FileUploadService;
 import org.koreait.member.libs.MemberUtil;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Lazy
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Service;
 public class BoardUpdateService {
     private final BoardConfigInfoService configInfoService;
     private final BoardDataRepository boardDataRepository;
+    private final FileUploadService uploadService;
+    private final PasswordEncoder encoder;
     private final HttpServletRequest request;
     private final MemberUtil memberUtil;
 
@@ -47,6 +51,28 @@ public class BoardUpdateService {
             item.setUa(request.getHeader("User-Agent"));
         }
 
-        return null;
+        // 등록, 수정 공통
+        item.setCategory(form.getCategory());
+        item.setPoster(form.getPoster());
+        item.setSubject(form.getSubject());
+        item.setContent(form.getContent());
+        item.setSecret(form.isSecret());
+
+        if (form.isGuest()) {
+            item.setGuestPw(encoder.encode(item.getGuestPw()));
+        }
+
+        if (memberUtil.isAdmin()) {
+            item.setNotice(form.isNotice());
+        } else {
+            item.setNotice(false); // 공지글은 관리자만 설정 가능
+        }
+
+        boardDataRepository.saveAndFlush(item);
+
+        // 파일 업로드 완료 처리
+        uploadService.processDone(gid);
+
+        return item;
     }
 }
