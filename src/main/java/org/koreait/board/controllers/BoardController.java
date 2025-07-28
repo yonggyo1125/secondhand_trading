@@ -3,6 +3,8 @@ package org.koreait.board.controllers;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.koreait.board.entities.Board;
+import org.koreait.board.entities.BoardData;
+import org.koreait.board.services.BoardUpdateService;
 import org.koreait.board.services.configs.BoardConfigInfoService;
 import org.koreait.board.validators.BoardValidator;
 import org.koreait.file.constants.FileStatus;
@@ -30,6 +32,7 @@ public class BoardController {
     private final Utils utils;
     private final MemberUtil memberUtil;
     private final BoardConfigInfoService configInfoService;
+    private final BoardUpdateService updateService;
     private final FileInfoService fileInfoService;
     private final BoardValidator boardValidator;
 
@@ -90,6 +93,9 @@ public class BoardController {
 
             return utils.tpl("board/" + mode);
         }
+
+        // 게시글 저장 처리
+        BoardData item = updateService.process(form);
 
         return "redirect:/board/list/" + form.getBid();
     }
