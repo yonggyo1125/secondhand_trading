@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.koreait.board.entities.Board;
 import org.koreait.board.entities.BoardData;
+import org.koreait.board.services.BoardInfoService;
 import org.koreait.board.services.BoardUpdateService;
 import org.koreait.board.services.configs.BoardConfigInfoService;
 import org.koreait.board.validators.BoardValidator;
@@ -33,6 +34,7 @@ public class BoardController {
     private final MemberUtil memberUtil;
     private final BoardConfigInfoService configInfoService;
     private final BoardUpdateService updateService;
+    private final BoardInfoService infoService;
     private final FileInfoService fileInfoService;
     private final BoardValidator boardValidator;
 
@@ -69,6 +71,8 @@ public class BoardController {
     @GetMapping("/update/{seq}")
     public String update(@PathVariable("seq") Long seq, Model model) {
         commonProcess(seq, "update", model);
+        RequestBoard form = infoService.getForm(seq);
+        model.addAttribute("requestBoard", form);
 
         return utils.tpl("board/update");
     }
@@ -78,9 +82,7 @@ public class BoardController {
         String mode = form.getMode();
         commonProcess(form.getBid(), mode, model);
 
-        if (mode.equals("update")) {
-
-        } else { // 게시글 등록시
+        if (!mode.equals("update")) { // 게시글 등록시
             form.setGuest(!memberUtil.isLogin());
         }
 
@@ -140,7 +142,7 @@ public class BoardController {
 
         addScript.add("board/common"); // 스킨 상관없는 공통 자바스크립트
 
-        if (mode.equals("write") || mode.equals("update")) { // 등록, 수정
+        if (mode.equals("write") || mode.equals("update")) {  // 등록, 수정
             if (board.isAttachFile() || (board.isImageUpload() && board.isEditor())) {
                 addCommonScript.add("fileManager");
             }
@@ -150,6 +152,9 @@ public class BoardController {
             }
 
             addScript.add(String.format("board/%s/form", skin)); // 스킨별 양식 관련 자바스크립트
+        } else if (mode.equals("view")) { // 게시글 보기
+            BoardData item = (BoardData)model.getAttribute("item");
+            pageTitle = item.getSubject() + " - " + pageTitle;
         }
 
         model.addAttribute("addCommonScript", addCommonScript);
@@ -167,6 +172,11 @@ public class BoardController {
      * @param model
      */
     private void commonProcess(Long seq, String mode, Model model) {
+        BoardData item = infoService.get(seq);
 
+        model.addAttribute("item", item);
+
+        Board board = item.getBoard();
+        commonProcess(board.getBid(), mode, model);
     }
 }

@@ -21,6 +21,7 @@ import org.koreait.member.libs.MemberUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
@@ -29,6 +30,7 @@ import java.util.Objects;
 
 @Lazy
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class BoardInfoService {
 
@@ -61,7 +63,10 @@ public class BoardInfoService {
      * @return
      */
     public RequestBoard getForm(Long seq) {
-        return mapper.map(get(seq), RequestBoard.class);
+        BoardData item = get(seq);
+        RequestBoard form = mapper.map(item, RequestBoard.class);
+        form.setBid(item.getBoard().getBid());
+        return form;
     }
 
     /**
@@ -235,5 +240,8 @@ public class BoardInfoService {
         // 첨부된 이미지 & 파일 목록
         item.setEditorImages(fileInfoService.getList(gid, "editor"));
         item.setAttachFiles(fileInfoService.getList(gid, "attach"));
+
+        // 비회원 게시글 여부
+        item.setGuest(item.getMember() == null);
     }
 }

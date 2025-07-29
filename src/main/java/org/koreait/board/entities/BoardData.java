@@ -59,4 +59,7 @@ public class BoardData extends BaseEntity implements Serializable {
 
     @Transient
     private List<FileInfo> attachFiles;
+
+    @Transient
+    private boolean guest;
 }
