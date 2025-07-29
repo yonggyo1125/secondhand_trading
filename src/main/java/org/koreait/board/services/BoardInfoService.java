@@ -116,6 +116,8 @@ public class BoardInfoService {
             } else { // 통합검색
                 fields = subject.concat(content).concat(name);
             }
+
+            andBuilder.and(fields.contains(skey));
         }
 
 
