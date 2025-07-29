@@ -9,4 +9,5 @@ import java.util.List;
 public class BoardSearch extends CommonSearch {
     private List<String> bid;
     private List<String> category;
+    private List<String> email;
 }

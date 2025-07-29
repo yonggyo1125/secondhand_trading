@@ -3,6 +3,7 @@ package org.koreait.board.services;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.koreait.board.controllers.BoardSearch;
 import org.koreait.board.entities.Board;
@@ -13,6 +14,7 @@ import org.koreait.board.repositories.BoardDataRepository;
 import org.koreait.board.services.configs.BoardConfigInfoService;
 import org.koreait.file.services.FileInfoService;
 import org.koreait.global.search.ListData;
+import org.koreait.global.search.Pagination;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -28,6 +30,7 @@ public class BoardInfoService {
     private final BoardConfigInfoService configInfoService;
     private final BoardDataRepository boardDataRepository;
     private final FileInfoService fileInfoService;
+    private final HttpServletRequest request;
     private final JPAQueryFactory queryFactory;
 
     /**
@@ -66,6 +69,7 @@ public class BoardInfoService {
         String skey = search.getSkey();
         LocalDate sDate = search.getSDate();
         LocalDate eDate = search.getEDate();
+        List<String> emails = search.getEmail();
 
         BooleanBuilder andBuilder = new BooleanBuilder();
         QBoardData boardData = QBoardData.boardData;
@@ -120,10 +124,36 @@ public class BoardInfoService {
             andBuilder.and(fields.contains(skey));
         }
 
+        // 회원 이메일로 게시글 조회
+        if (emails != null && !emails.isEmpty()) {
+            andBuilder.and(boardData.member.email.in(emails));
+        }
 
         /* 검색 조건 처리 E */
 
-        return null;
+        List<BoardData> items = queryFactory.selectFrom(boardData)
+                .leftJoin(boardData.member)
+                .fetchJoin()
+                .where(andBuilder)
+                .offset(offset)
+                .limit(limit)
+                .orderBy(boardData.notice.desc(), boardData.createdAt.desc())
+                .fetch();
+
+        int total = (int)boardDataRepository.count(andBuilder);
+
+        // 추가 정보 처리
+        items.forEach(this::addInfo);
+
+        int range = 10;
+        if (board != null) {
+            range = board.getPageCount();
+            range = range < 1 ? 10 : range;
+        }
+
+        Pagination pagination = new Pagination(page, total, range, limit, request);
+
+        return new ListData<>(items, pagination);
     }
 
     /**
