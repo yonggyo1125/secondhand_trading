@@ -6,6 +6,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.koreait.board.controllers.BoardSearch;
+import org.koreait.board.controllers.RequestBoard;
 import org.koreait.board.entities.Board;
 import org.koreait.board.entities.BoardData;
 import org.koreait.board.entities.QBoardData;
@@ -15,12 +16,16 @@ import org.koreait.board.services.configs.BoardConfigInfoService;
 import org.koreait.file.services.FileInfoService;
 import org.koreait.global.search.ListData;
 import org.koreait.global.search.Pagination;
+import org.koreait.member.entities.Member;
+import org.koreait.member.libs.MemberUtil;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Lazy
 @Service
@@ -32,6 +37,8 @@ public class BoardInfoService {
     private final FileInfoService fileInfoService;
     private final HttpServletRequest request;
     private final JPAQueryFactory queryFactory;
+    private final MemberUtil memberUtil;
+    private final ModelMapper mapper;
 
     /**
      * 게시글 1개 조회
@@ -46,6 +53,67 @@ public class BoardInfoService {
         addInfo(item);
 
         return item;
+    }
+
+    /**
+     * 게시글 수정시 조회
+     * @param seq
+     * @return
+     */
+    public RequestBoard getForm(Long seq) {
+        return mapper.map(get(seq), RequestBoard.class);
+    }
+
+    /**
+     * 내가 쓴 게시글 목록
+     *
+     * @param search
+     * @return
+     */
+    public ListData<BoardData> getMyList(BoardSearch search) {
+        if (!memberUtil.isLogin()) {
+            return new ListData<>();
+        }
+
+        search = Objects.requireNonNullElseGet(search, BoardSearch::new);
+
+        Member member = memberUtil.getMember();
+        search.setEmail(List.of(member.getEmail()));
+
+        return getList(search);
+    }
+
+    /**
+     * 특정 게시판의 목록 조회
+     *
+     * @param bid
+     * @param search
+     * @return
+     */
+    public ListData<BoardData> getList(String bid, BoardSearch search) {
+        search = Objects.requireNonNullElseGet(search, BoardSearch::new);
+        search.setBid(List.of(bid));
+
+        return getList(search);
+    }
+
+    /**
+     * 최신 게시글
+     *
+     * @param bid
+     * @param limit
+     * @return
+     */
+    public List<BoardData> getLatest(String bid, int limit) {
+        BoardSearch search = new BoardSearch();
+        search.setBid(List.of(bid));
+        search.setLimit(limit);
+
+        return getList(search).getItems();
+    }
+
+    public List<BoardData> getLatest(String bid) {
+        return getLatest(bid, 10);
     }
 
     public ListData<BoardData> getList(BoardSearch search) {
