@@ -12,6 +12,7 @@ import org.koreait.file.constants.FileStatus;
 import org.koreait.file.services.FileInfoService;
 import org.koreait.global.annotations.ApplyCommonController;
 import org.koreait.global.libs.Utils;
+import org.koreait.global.search.ListData;
 import org.koreait.member.libs.MemberUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,6 +48,10 @@ public class BoardController {
     @GetMapping("/list/{bid}")
     public String list(@PathVariable("bid") String bid, @ModelAttribute BoardSearch search, Model model) {
         commonProcess(bid, "list", model);
+
+        ListData<BoardData> data = infoService.getList(bid, search);
+        model.addAttribute("items", data.getItems());
+        model.addAttribute("pagination", data.getPagination());
 
         return utils.tpl("board/list");
     }
@@ -162,6 +167,7 @@ public class BoardController {
         model.addAttribute("addCss", addCss);
         model.addAttribute("pageTitle", pageTitle);
         model.addAttribute("board", board);
+        model.addAttribute("mode", mode);
     }
 
     /**
