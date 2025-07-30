@@ -110,8 +110,16 @@ public class BoardController {
 
     // 게시글 보기
     @GetMapping("/view/{seq}")
-    public String view(@PathVariable("seq") Long seq, Model model) {
+    public String view(@PathVariable("seq") Long seq, Model model, @SessionAttribute("board") Board board) {
         commonProcess(seq, "view", model);
+
+        if (board.isShowViewList()) { // 게시글 보기 하단에 목록 노출
+            BoardSearch search = new BoardSearch();
+            ListData<BoardData> data = infoService.getList(board.getBid(), search);
+            model.addAttribute("items", data.getItems());
+            model.addAttribute("pagination", data.getPagination());
+            model.addAttribute("boardSearch", search);
+        }
 
         return utils.tpl("board/view");
     }

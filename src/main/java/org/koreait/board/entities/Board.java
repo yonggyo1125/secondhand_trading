@@ -36,6 +36,7 @@ public class Board extends BaseEntity implements Serializable {
     private boolean attachFile; // 파일 첨부 기능 사용 여부
     private boolean comment; // 댓글 사용 여부
     private boolean afterWritingRedirect; // 글 작성 후 이동 방향 - false : 게시글 목록,  true : 게시글 상세
+    private boolean showViewList; // 글보기 하단에 목록 노출 여부
 
     @Enumerated(EnumType.STRING)
     private Authority listAuthority; // 목록 권한, ALL - 전체, MEMBER - 회원, ADMIN - 관리자
