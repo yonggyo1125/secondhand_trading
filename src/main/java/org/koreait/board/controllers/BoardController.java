@@ -4,8 +4,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.koreait.board.entities.Board;
 import org.koreait.board.entities.BoardData;
+import org.koreait.board.services.BoardDeleteService;
 import org.koreait.board.services.BoardInfoService;
 import org.koreait.board.services.BoardUpdateService;
+import org.koreait.board.services.BoardViewCountService;
 import org.koreait.board.services.configs.BoardConfigInfoService;
 import org.koreait.board.validators.BoardValidator;
 import org.koreait.file.constants.FileStatus;
@@ -36,6 +38,8 @@ public class BoardController {
     private final BoardConfigInfoService configInfoService;
     private final BoardUpdateService updateService;
     private final BoardInfoService infoService;
+    private final BoardDeleteService deleteService;
+    private final BoardViewCountService viewCountService;
     private final FileInfoService fileInfoService;
     private final BoardValidator boardValidator;
 
@@ -121,6 +125,9 @@ public class BoardController {
             model.addAttribute("boardSearch", search);
         }
 
+        // 게시글 조회수 업데이트
+        viewCountService.update(seq);
+
         return utils.tpl("board/view");
     }
 
@@ -128,6 +135,7 @@ public class BoardController {
     @GetMapping("/delete/{seq}")
     public String delete(@PathVariable("seq") Long seq, Model model, @SessionAttribute("board") Board board) {
         commonProcess(seq, "delete", model);
+        deleteService.process(seq);
 
         return "redirect:/board/list/" + board.getBid();
     }

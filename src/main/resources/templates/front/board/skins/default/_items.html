@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="skin">
-
+    <nav th:replace="~{front/board/skins/default/_category::skin}"></nav>
     <ul class="items">
         <li th:if="${items == null || items.isEmpty()}" class="no-data" th:text="#{조회된_게시글이_없습니다}"></li>
         <li th:unless="${items == null || items.isEmpty()}" th:each="item : ${items}" th:object="${item}">

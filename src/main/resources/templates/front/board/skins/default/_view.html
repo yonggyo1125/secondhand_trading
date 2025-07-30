@@ -17,8 +17,9 @@
             </span>
         </div>
         <div class="right">
-            <span class="view-count">
+            <span class="view-count" th:if="*{viewCount > 0}">
                 <th:block th:text="#{조회수}"></th:block>:
+                <th:block th:text="*{viewCount > 1000 ? #numbers.formatInteger(viewCount, 3, 'COMMA') : viewCount}"></th:block>
             </span>
             <span class="post-date">
                 <th:block th:text="#{작성일시}"></th:block>:
