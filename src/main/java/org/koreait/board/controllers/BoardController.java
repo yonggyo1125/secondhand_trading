@@ -1,21 +1,23 @@
 package org.koreait.board.controllers;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.koreait.board.entities.Board;
 import org.koreait.board.entities.BoardData;
-import org.koreait.board.services.BoardDeleteService;
-import org.koreait.board.services.BoardInfoService;
-import org.koreait.board.services.BoardUpdateService;
-import org.koreait.board.services.BoardViewCountService;
+import org.koreait.board.exceptions.GuestPasswordCheckException;
+import org.koreait.board.services.*;
 import org.koreait.board.services.configs.BoardConfigInfoService;
 import org.koreait.board.validators.BoardValidator;
 import org.koreait.file.constants.FileStatus;
 import org.koreait.file.services.FileInfoService;
 import org.koreait.global.annotations.ApplyCommonController;
+import org.koreait.global.exceptions.script.AlertException;
 import org.koreait.global.libs.Utils;
 import org.koreait.global.search.ListData;
 import org.koreait.member.libs.MemberUtil;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -40,8 +42,11 @@ public class BoardController {
     private final BoardInfoService infoService;
     private final BoardDeleteService deleteService;
     private final BoardViewCountService viewCountService;
+    private final BoardAuthService authService;
     private final FileInfoService fileInfoService;
     private final BoardValidator boardValidator;
+    private final PasswordEncoder encoder;
+    private final HttpSession session;
 
     @ModelAttribute("board")
     public Board getBoard() {
@@ -140,6 +145,33 @@ public class BoardController {
         return "redirect:/board/list/" + board.getBid();
     }
 
+    // 비회원 글수정, 글삭제 비밀번호 확인
+    @ExceptionHandler(GuestPasswordCheckException.class)
+    public String guestPassword(Model model) {
+
+        model.addAttribute("pageTitle", utils.getMessage("비회원_비밀번호_확인"));
+        return utils.tpl("board/password");
+    }
+
+    // 비회원 글수정, 글삭제 비밀번호 확인
+    @PostMapping("/password")
+    public String guestPasswordCheck(@RequestParam(name="password", required = false) String password, Model model, @SessionAttribute("board_guest_seq") Long seq) {
+        if (!StringUtils.hasText(password)) {
+            throw new AlertException(utils.getMessage("비밀번호를_입력하세요."), HttpStatus.BAD_REQUEST);
+        }
+
+        BoardData item = infoService.get(seq);
+        if (!encoder.matches(password, item.getGuestPw())) {
+            throw new AlertException(utils.getMessage("비밀번호가_일치하지_않습니다."), HttpStatus.BAD_REQUEST);
+        }
+
+        session.setAttribute("board_seq_" + seq, true); // 비회원 비밀번호 확인 완료
+
+
+        model.addAttribute("script", "parent.location.reload();");
+        return "common/_execute_script";
+    }
+
     /**
      * bid 기준의 공통 처리
      *  - 게시글 설정조회가 공통 처리
@@ -150,6 +182,9 @@ public class BoardController {
      */
     private void commonProcess(String bid, String mode, Model model) {
         Board board = configInfoService.get(bid);
+
+        authService.check(mode, bid); // 글쓰기, 글목록에서의 권한 체크
+
         mode = StringUtils.hasText(mode) ? mode : "list";
 
         List<String> addCommonScript = new ArrayList<>();
@@ -195,10 +230,12 @@ public class BoardController {
      */
     private void commonProcess(Long seq, String mode, Model model) {
         BoardData item = infoService.get(seq);
-
         model.addAttribute("item", item);
+
+        authService.check(mode, seq); // 글보기, 글수정시 권한 체크
 
         Board board = item.getBoard();
         commonProcess(board.getBid(), mode, model);
     }
+
 }
