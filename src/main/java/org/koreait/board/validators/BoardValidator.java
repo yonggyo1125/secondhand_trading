@@ -42,8 +42,14 @@ public class BoardValidator implements Validator, PasswordValidator {
             String guestPw = form.getGuestPw();
             if (!StringUtils.hasText(guestPw)) {
                 errors.rejectValue("guestPw", "NotBlank");
-            } else if (!checkAlpha(guestPw, true) || !checkNumber(guestPw) || guestPw.length() < 4){ // 비밀번호 복잡성도 체크
-                errors.rejectValue("Complexity", "guestPw");
+            } else {
+                if (guestPw.length() < 4) {
+                    errors.rejectValue("guestPw", "Size");
+                }
+
+                if (!checkAlpha(guestPw, true) || !checkNumber(guestPw)) { // 비밀번호 복잡성도 체크
+                    errors.rejectValue("Complexity", "guestPw");
+                }
             }
         }
     }

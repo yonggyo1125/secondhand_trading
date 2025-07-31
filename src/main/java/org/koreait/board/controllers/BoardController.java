@@ -9,6 +9,7 @@ import org.koreait.board.exceptions.GuestPasswordCheckException;
 import org.koreait.board.services.*;
 import org.koreait.board.services.configs.BoardConfigInfoService;
 import org.koreait.board.validators.BoardValidator;
+import org.koreait.board.validators.CommentValidator;
 import org.koreait.file.constants.FileStatus;
 import org.koreait.file.services.FileInfoService;
 import org.koreait.global.annotations.ApplyCommonController;
@@ -45,6 +46,8 @@ public class BoardController {
     private final BoardAuthService authService;
     private final FileInfoService fileInfoService;
     private final BoardValidator boardValidator;
+    private final CommentValidator commentValidator;
+    private final CommentUpdateService commentUpdateService;
     private final PasswordEncoder encoder;
     private final HttpSession session;
 
@@ -137,8 +140,11 @@ public class BoardController {
                 RequestComment commentForm = new RequestComment();
                 if (memberUtil.isLogin()) { // 로그인 상태라면 로그인한 회원 이름으로 초기값
                     commentForm.setCommenter(memberUtil.getMember().getName());
+                } else {
+                    commentForm.setGuest(true);
                 }
-
+                commentForm.setBoardDataSeq(seq);
+                commentForm.setMode("comment_write");
                 model.addAttribute("requestComment", commentForm);
             }
         }
@@ -148,14 +154,18 @@ public class BoardController {
 
     @PostMapping("/comment")
     public String comment(@Valid RequestComment form, Errors errors, Model model) {
-        if (errors.hasErrors()) {
 
+        commentValidator.validate(form, errors);
+
+        if (errors.hasErrors()) {
             for (Map.Entry<String, List<String>> entry : utils.getErrorMessages(errors).entrySet()) {
                 String message = entry.getValue().getFirst();
                 throw new AlertException(message, HttpStatus.BAD_REQUEST);
             }
         }
+
         // 댓글 작성 처리
+        commentUpdateService.process(form);
 
         // 댓글 작성이 완료되면 부모창을 새로고침
         model.addAttribute("script", "parent.location.reload();");

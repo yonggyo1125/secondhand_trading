@@ -46,7 +46,7 @@ public class BoardAuthService {
             board = configInfoService.get(bid);
         }
 
-        // 게시글 보기, 게시글 수정
+        // 게시글 보기, 게시글 삭제, 게시글 수정
         if (seq != null && seq > 0L) {
             item = infoService.get(seq);
             board = item.getBoard();
@@ -86,7 +86,7 @@ public class BoardAuthService {
                 }
             }
         }
-            // 글작성, 글보기, 글 목록 권한 체크 S
+            // 글작성, 글 목록 권한 체크 S
 
             /**
              * 글 수정, 글 삭제 권한 체크 S
