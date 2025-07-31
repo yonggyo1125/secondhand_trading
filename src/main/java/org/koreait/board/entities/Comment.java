@@ -38,4 +38,10 @@ public class Comment extends BaseEntity implements Serializable {
 
     @Transient
     private boolean editable; // 게시글 수정, 삭제 가능 여부(버튼 노출 여부)
+
+    @Transient
+    private boolean mine; // 직접 작성한 게시글인지 여부
+
+    @Transient
+    private boolean guest; // 비회원 게시글 여부
 }

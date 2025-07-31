@@ -1,10 +1,12 @@
 package org.koreait.board.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.koreait.board.entities.Board;
 import org.koreait.board.entities.BoardData;
+import org.koreait.board.entities.Comment;
 import org.koreait.board.exceptions.GuestPasswordCheckException;
 import org.koreait.board.services.*;
 import org.koreait.board.services.configs.BoardConfigInfoService;
@@ -48,8 +50,10 @@ public class BoardController {
     private final BoardValidator boardValidator;
     private final CommentValidator commentValidator;
     private final CommentUpdateService commentUpdateService;
+    private final CommentInfoService commentInfoService;
     private final PasswordEncoder encoder;
     private final HttpSession session;
+    private final HttpServletRequest request;
 
     // 게시글 목록
     @GetMapping("/list/{bid}")
@@ -147,6 +151,9 @@ public class BoardController {
                 commentForm.setMode("comment_write");
                 model.addAttribute("requestComment", commentForm);
             }
+
+            // 댓글 목록
+            model.addAttribute("comments", commentInfoService.getList(seq));
         }
 
         return utils.tpl("board/view");
@@ -165,12 +172,24 @@ public class BoardController {
         }
 
         // 댓글 작성 처리
-        commentUpdateService.process(form);
+        Comment item = commentUpdateService.process(form);
 
         // 댓글 작성이 완료되면 부모창을 새로고침
+        //model.addAttribute("script", String.format("parent.location.replace('%s/board/view/%s#comment-%s')", request.getContextPath(), form.getBoardDataSeq(), item.getSeq()));
         model.addAttribute("script", "parent.location.reload();");
         return "common/_execute_script";
-     }
+    }
+
+    // 댓글 수정
+    @GetMapping("/comment/{seq}")
+    public String commentUpdate(Long seq, Model model) {
+        commonProcess(seq, "comment_update", model);
+
+        RequestComment form = commentInfoService.getForm(seq);
+        model.addAttribute("requestComment", form);
+
+        return utils.tpl("board/comment_update");
+    }
 
     // 게시글 삭제
     @GetMapping("/delete/{seq}")
