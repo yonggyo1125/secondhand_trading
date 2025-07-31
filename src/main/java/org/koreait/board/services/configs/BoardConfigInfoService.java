@@ -12,6 +12,8 @@ import org.koreait.board.repositories.BoardRepository;
 import org.koreait.global.search.CommonSearch;
 import org.koreait.global.search.ListData;
 import org.koreait.global.search.Pagination;
+import org.koreait.member.constants.Authority;
+import org.koreait.member.libs.MemberUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
@@ -32,6 +34,7 @@ public class BoardConfigInfoService {
 
     private final BoardRepository repository;
     private final HttpServletRequest request;
+    private final MemberUtil memberUtil;
     private final ModelMapper mapper;
 
     /**
@@ -112,6 +115,27 @@ public class BoardConfigInfoService {
      * @param item
      */
     private void addInfo(Board item) {
+
+        boolean writable = true, listable = true, commentable = true;
+
+        Authority writeAuthority = item.getWriteAuthority();
+        if (writeAuthority != Authority.ALL && ((writeAuthority == Authority.MEMBER && !memberUtil.isLogin()) || (writeAuthority == Authority.ADMIN && !memberUtil.isAdmin()))) {
+            writable = false;
+        }
+
+        Authority listAuthority = item.getListAuthority();
+        if (listAuthority != Authority.ALL && ((listAuthority == Authority.MEMBER && !memberUtil.isLogin()) || (listAuthority == Authority.ADMIN && !memberUtil.isAdmin()))) {
+            listable = false;
+        }
+
+        Authority commentAuthority = item.getCommentAuthority();
+        if (commentAuthority != Authority.ALL && ((commentAuthority == Authority.MEMBER && !memberUtil.isLogin()) || (commentAuthority == Authority.ADMIN && !memberUtil.isAdmin()))) {
+            commentable = false;
+        }
+
+        item.setWritable(writable);
+        item.setListable(listable);
+        item.setCommentable(commentable);
 
     }
 }

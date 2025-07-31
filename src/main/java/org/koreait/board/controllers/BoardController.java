@@ -26,13 +26,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Controller
 @ApplyCommonController
 @RequiredArgsConstructor
 @RequestMapping("/board")
-@SessionAttributes({"board"})
 public class BoardController {
 
     private final Utils utils;
@@ -47,11 +47,6 @@ public class BoardController {
     private final BoardValidator boardValidator;
     private final PasswordEncoder encoder;
     private final HttpSession session;
-
-    @ModelAttribute("board")
-    public Board getBoard() {
-        return new Board();
-    }
 
     // 게시글 목록
     @GetMapping("/list/{bid}")
@@ -92,9 +87,10 @@ public class BoardController {
     }
 
     @PostMapping("/save")
-    public String save(@Valid RequestBoard form, Errors errors, Model model, @SessionAttribute("board") Board board) {
+    public String save(@Valid RequestBoard form, Errors errors, Model model) {
         String mode = form.getMode();
         commonProcess(form.getBid(), mode, model);
+        Board board = (Board)model.getAttribute("board");
 
         if (!mode.equals("update")) { // 게시글 등록시
             form.setGuest(!memberUtil.isLogin());
@@ -119,10 +115,12 @@ public class BoardController {
 
     // 게시글 보기
     @GetMapping("/view/{seq}")
-    public String view(@PathVariable("seq") Long seq, Model model, @SessionAttribute("board") Board board) {
+    public String view(@PathVariable("seq") Long seq, Model model) {
         commonProcess(seq, "view", model);
 
-        if (board.isShowViewList()) { // 게시글 보기 하단에 목록 노출
+        Board board = (Board)model.getAttribute("board");
+
+        if (board != null && board.isShowViewList()) { // 게시글 보기 하단에 목록 노출
             BoardSearch search = new BoardSearch();
             ListData<BoardData> data = infoService.getList(board.getBid(), search);
             model.addAttribute("items", data.getItems());
@@ -133,14 +131,44 @@ public class BoardController {
         // 게시글 조회수 업데이트
         viewCountService.update(seq);
 
+        // 댓글 기본값 처리
+        if (board != null && board.isComment()) {
+            if (board.isCommentable()) { // 댓글 작성 가능 여부
+                RequestComment commentForm = new RequestComment();
+                if (memberUtil.isLogin()) { // 로그인 상태라면 로그인한 회원 이름으로 초기값
+                    commentForm.setCommenter(memberUtil.getMember().getName());
+                }
+
+                model.addAttribute("requestComment", commentForm);
+            }
+        }
+
         return utils.tpl("board/view");
     }
 
+    @PostMapping("/comment")
+    public String comment(@Valid RequestComment form, Errors errors, Model model) {
+        if (errors.hasErrors()) {
+
+            for (Map.Entry<String, List<String>> entry : utils.getErrorMessages(errors).entrySet()) {
+                String message = entry.getValue().getFirst();
+                throw new AlertException(message, HttpStatus.BAD_REQUEST);
+            }
+        }
+        // 댓글 작성 처리
+
+        // 댓글 작성이 완료되면 부모창을 새로고침
+        model.addAttribute("script", "parent.location.reload();");
+        return "common/_execute_script";
+     }
+
     // 게시글 삭제
     @GetMapping("/delete/{seq}")
-    public String delete(@PathVariable("seq") Long seq, Model model, @SessionAttribute("board") Board board) {
+    public String delete(@PathVariable("seq") Long seq, Model model) {
         commonProcess(seq, "delete", model);
         deleteService.process(seq);
+
+        Board board = (Board)model.getAttribute("board");
 
         return "redirect:/board/list/" + board.getBid();
     }
@@ -148,7 +176,9 @@ public class BoardController {
     // 비회원 글수정, 글삭제 비밀번호 확인
     @ExceptionHandler(GuestPasswordCheckException.class)
     public String guestPassword(Model model) {
-
+        model.addAttribute("isLogin", memberUtil.isLogin());
+        model.addAttribute("isAdmin", memberUtil.isAdmin());
+        model.addAttribute("loggedMember", memberUtil.getMember());
         model.addAttribute("pageTitle", utils.getMessage("비회원_비밀번호_확인"));
         return utils.tpl("board/password");
     }

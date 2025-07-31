@@ -54,8 +54,9 @@ public class BoardAuthService {
 
         // 게시판 사용 여부
         if (!board.isActive()) {
-           throw new BoardNotFoundException();
+            throw new BoardNotFoundException();
         }
+
         // 글작성, 글보기, 글 목록 권한 체크 S
         if (mode.equals("write") || mode.equals("list") || mode.equals("view")) {
             Authority authority = mode.equals("write") ? board.getWriteAuthority() : mode.equals("view") ? board.getViewAuthority() : board.getListAuthority();

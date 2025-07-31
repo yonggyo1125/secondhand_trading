@@ -4,6 +4,7 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.koreait.board.controllers.BoardSearch;
 import org.koreait.board.controllers.RequestBoard;
@@ -243,5 +244,25 @@ public class BoardInfoService {
 
         // 비회원 게시글 여부
         item.setGuest(item.getMember() == null);
+
+        /**
+         * 내 게시글 여부, 수정 가능 여부
+         * 회원 게시글 : 작성한 회원번호와 로그인한 회원 번호가 일치
+         * 비회원 게시글 : 비회원 비밀번호 확인이 완료된 게시글(board_seq_게시글번호)
+         */
+        boolean editable = true;
+        if (item.isGuest()) { // 비회원 게시글
+            HttpSession session = request.getSession();
+            item.setMine(session.getAttribute("board_seq_" + item.getSeq()) != null);
+        } else { // 회원 게시글
+            Member boardMember = item.getMember(); // 게시글을 작성한 회원
+            Member member = memberUtil.getMember(); // 로그인한 회원
+            item.setMine(memberUtil.isLogin() && boardMember.getSeq().equals(member.getSeq())); // 로그인한 회원 정보와 게시글 작성 회원 정보가 일치
+            if (!memberUtil.isAdmin()) {
+                editable = item.isMine();
+            }
+        }
+
+        item.setEditable(editable);
     }
 }
