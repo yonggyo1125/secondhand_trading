@@ -13,11 +13,13 @@ import org.koreait.member.libs.MemberUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Lazy
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CommentInfoService {
     private final CommentRepository commentRepository;
@@ -41,7 +43,12 @@ public class CommentInfoService {
     }
 
     public RequestComment getForm(Long seq) {
-        return mapper.map(get(seq), RequestComment.class);
+        Comment item = get(seq);
+        RequestComment form = mapper.map(item, RequestComment.class);
+        form.setMode("comment_update");
+        form.setBoardDataSeq(item.getItem().getSeq());
+
+        return form;
     }
 
     /**

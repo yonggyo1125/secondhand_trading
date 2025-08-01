@@ -5,9 +5,10 @@
     <ul class="items">
         <li th:if="${items == null || items.isEmpty()}" class="no-data" th:text="#{조회된_게시글이_없습니다}"></li>
         <li th:unless="${items == null || items.isEmpty()}" th:each="item : ${items}" th:object="${item}">
-            <a th:href="@{/board/view/{seq}(seq=*{seq})}" class="subject">
+            <a th:href="@{/board/view/{seq}(seq=*{seq})}">
                 <span th:if="*{notice}" class="notice" th:text="#{공지}"></span>
-                <th:block th:text="*{subject}"></th:block>
+                <span class="subject" th:text="*{subject}"></span>
+                <span th:if="*{commentCount > 0}" th:text="*{#strings.concat('(', commentCount + ')')}"></span>
             </a>
             <span class="post-info">
                 <span class="user-info">

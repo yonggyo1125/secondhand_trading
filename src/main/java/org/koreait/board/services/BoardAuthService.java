@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.koreait.board.entities.Board;
 import org.koreait.board.entities.BoardData;
+import org.koreait.board.entities.Comment;
 import org.koreait.board.exceptions.BoardNotFoundException;
 import org.koreait.board.exceptions.GuestPasswordCheckException;
 import org.koreait.board.services.configs.BoardConfigInfoService;
@@ -29,6 +30,7 @@ public class BoardAuthService {
     private final MemberUtil memberUtil;
     private final BoardConfigInfoService configInfoService;
     private final BoardInfoService infoService;
+    private final CommentInfoService commentInfoService;
     private final HttpServletRequest request;
     private final HttpServletResponse response;
 
@@ -40,15 +42,22 @@ public class BoardAuthService {
 
         Board board = null; // 게시판 설정
         BoardData item = null; // 게시글
+        Comment comment = null; // 댓글
 
         // 글작성, 글목록
         if (StringUtils.hasText(bid)) {
             board = configInfoService.get(bid);
         }
 
-        // 게시글 보기, 게시글 삭제, 게시글 수정
+        // 게시글 보기, 게시글 삭제, 게시글 수정, 댓글 수정, 댓글 삭제
         if (seq != null && seq > 0L) {
-            item = infoService.get(seq);
+            if (mode.startsWith("comment_")) { // 댓글 수정, 삭제
+                comment = commentInfoService.get(seq);
+                item = comment.getItem(); // 게시글
+            } else { // 게시글
+                item = infoService.get(seq);
+            }
+
             board = item.getBoard();
         }
 
@@ -113,6 +122,23 @@ public class BoardAuthService {
                 }
             }
             // 글 수정, 글 삭제 권한 체크 E
+
+            // 댓글 수정, 댓글 삭제 권한 체크 S
+            if (comment != null && mode.startsWith("comment_")) {
+                if (comment.isGuest()) { // 비회원 댓글
+                    HttpSession session = request.getSession();
+                    if (session.getAttribute("comment_seq_" + seq) == null) { // 비회원 인증을 받지 않은 상태
+                        session.setAttribute("comment_guest_seq", seq);
+                        throw new GuestPasswordCheckException(); // 비밀번호 확인 페이지 출력
+                    }
+                } else { // 회원 댓글
+                    Member commentMember = comment.getMember();
+                    if (!memberUtil.isLogin() || !commentMember.getSeq().equals(memberUtil.getMember().getSeq())) { // 직접 작성한 게시글이 아닌 경우
+                        throw new AlertBackException(utils.getMessage("UnAuthorized"), HttpStatus.UNAUTHORIZED);
+                    }
+                }
+            }
+            // 댓글 수정, 댓글 삭제 권한 체크 E
     }
 
     /**

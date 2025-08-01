@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.koreait.board.controllers.RequestComment;
 import org.koreait.board.entities.BoardData;
 import org.koreait.board.entities.Comment;
+import org.koreait.board.entities.QComment;
+import org.koreait.board.repositories.BoardDataRepository;
 import org.koreait.board.repositories.CommentRepository;
 import org.koreait.member.libs.MemberUtil;
 import org.springframework.context.annotation.Lazy;
@@ -17,6 +19,7 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor
 public class CommentUpdateService {
     private final CommentRepository commentRepository;
+    private final BoardDataRepository boardDataRepository;
     private final BoardInfoService boardInfoService;
     private final HttpServletRequest request;
     private final PasswordEncoder encoder;
@@ -46,6 +49,25 @@ public class CommentUpdateService {
 
         commentRepository.saveAndFlush(item);
 
+        // 댓글 갯수 업데이트
+        updateCommentCount(form.getBoardDataSeq());
+
         return item;
+    }
+
+    /**
+     * 게시글별 댓글 갯수 업데이트
+     *
+     * @param boardDataSeq
+     */
+    public void updateCommentCount(Long boardDataSeq) {
+        QComment comment = QComment.comment;
+        long total = commentRepository.count(comment.item.seq.eq(boardDataSeq));
+
+        BoardData item = boardDataRepository.findById(boardDataSeq).orElse(null);
+        if (item != null) {
+            item.setCommentCount((int)total);
+            boardDataRepository.saveAndFlush(item);
+        }
     }
 }

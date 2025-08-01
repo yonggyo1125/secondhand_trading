@@ -47,6 +47,8 @@ public class BoardData extends BaseEntity implements Serializable {
 
     private int viewCount; // 조회수
 
+    private int commentCount; // 댓글 수
+
     @Column(length=20)
     private String ip; // 작성자 IP 주소
 
