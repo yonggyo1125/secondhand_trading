@@ -198,4 +198,16 @@ public class Utils {
         return text.replaceAll("\r", "")
                 .replaceAll("\n", "<br>");
     }
+
+    /**
+     * 태그를 제거한 문자열로 처리
+     *
+     * @param text
+     * @return
+     */
+    public String stripTags(String text) {
+        return text.replaceAll("<p[^>]*>(.*?)<\\/p>", "\n")
+                .replaceAll("<[^>]*>", "")
+                .replaceAll("&nbsp", " ");
+    }
 }
