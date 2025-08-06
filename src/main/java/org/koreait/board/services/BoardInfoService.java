@@ -15,6 +15,7 @@ import org.koreait.board.exceptions.BoardDataNotFoundException;
 import org.koreait.board.repositories.BoardDataRepository;
 import org.koreait.board.services.configs.BoardConfigInfoService;
 import org.koreait.file.services.FileInfoService;
+import org.koreait.global.libs.Utils;
 import org.koreait.global.search.ListData;
 import org.koreait.global.search.Pagination;
 import org.koreait.member.entities.Member;
@@ -42,6 +43,7 @@ public class BoardInfoService {
     private final JPAQueryFactory queryFactory;
     private final MemberUtil memberUtil;
     private final ModelMapper mapper;
+    private final Utils utils;
 
     /**
      * 게시글 1개 조회

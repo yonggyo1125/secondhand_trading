@@ -5,19 +5,24 @@
     <ul class="items">
         <li th:if="${items == null || items.isEmpty()}" class="no-data" th:text="#{조회된_게시글이_없습니다}"></li>
         <li th:unless="${items == null || items.isEmpty()}" th:each="item : ${items}" th:object="${item}">
-            <a th:href="@{/board/view/{seq}(seq=*{seq})}">
-                <span th:if="*{notice}" class="notice" th:text="#{공지}"></span>
-                <span class="subject" th:text="*{subject}"></span>
-                <span th:if="*{commentCount > 0}" th:text="*{#strings.concat('(', commentCount + ')')}"></span>
-            </a>
-            <span class="post-info">
-                <span class="user-info">
-                    <th:block th:text="*{poster}"></th:block>
-                    <th:block th:if="*{!guest}" th:text="*{#strings.concat('(', member.email, ')')}"></th:block>
+            <th:block th:if="*{deletedAt == null}">
+                <a th:href="@{/board/view/{seq}(seq=*{seq})}">
+                    <span th:if="*{notice}" class="notice" th:text="#{공지}"></span>
+                    <span class="subject" th:text="*{subject}"></span>
+                    <span th:if="*{commentCount > 0}" th:text="*{#strings.concat('(', commentCount + ')')}"></span>
+                </a>
+                <span class="post-info">
+                    <span class="user-info">
+                        <th:block th:text="*{poster}"></th:block>
+                        <th:block th:if="*{!guest}" th:text="*{#strings.concat('(', member.email, ')')}"></th:block>
+                    </span>
+                    <span class="date-info" th:text="*{#temporals.format(createdAt, 'yyyy.MM.dd HH:mm')}"></span>
+                    <span class="view-count" th:if="*{viewCount > 0}" th:text="*{viewCount >= 1000 ? #numbers.formatInteger(viewCount, 3, 'COMMA') : viewCount}"></span>
                 </span>
-                <span class="date-info" th:text="*{#temporals.format(createdAt, 'yyyy.MM.dd HH:mm')}"></span>
-                <span class="view-count" th:if="*{viewCount > 0}" th:text="*{viewCount >= 1000 ? #numbers.formatInteger(viewCount, 3, 'COMMA') : viewCount}"></span>
-            </span>
+            </th:block>
+            <th:block th:if="*{deletedAt != null}">
+                <a th:href="@{/board/view/{seq}(seq=*{seq})}" th:text="#{삭제된_게시글}"></a>
+            </th:block>
         </li>
     </ul>
     <form th:if="${board != null}" class="frm-search" name="frmSearch" method="GET" th:action="@{/board/list/{bid}(bid=${board.bid})}" autocomplete="off" th:object="${boardSearch}">
